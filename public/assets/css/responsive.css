@@ -1,0 +1,601 @@
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .delivery {
+        background-size: cover;
+    }
+    .height-955 {
+        height: 880px;
+    }
+    .banner-bg.slider5-height {
+        height: 880px;
+    }
+    .hero4-title {
+        font-size: 71px;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    .cb-category-inner-slider-wrapper.pl-58 {
+        padding-left: 0;
+    }
+    .app-section.app-section-1 {
+        margin-top: 0;
+        margin-bottom: 25px;
+    }
+    .h-100.pl-40 {
+        padding-left: 20px;
+    }
+    .about-content.pl-50 {
+        padding-left: 25px;
+    }
+    ul.about-ul {
+        display: block;
+    }
+    ul.about-ul li {
+        width: 100%;
+    }
+    .delivery {
+        background-size: cover;
+    }
+    .banner-3 .banner-slider {
+        padding: 70px 0;
+    }
+    .hero4-title {
+        font-size: 55px;
+    }
+    .hero4-title.hero5-title {
+        font-size: 65px;
+    }
+    .height-955 {
+        height: 780px;
+    }
+    .banner-bg.slider5-height {
+        height: 780px;
+    }
+
+}
+@media (min-width: 768px) and (max-width: 991px) { 
+    .note-title {
+        font-size: 32px;
+    }
+    .cb-category-inner-text.pl-50 {
+        padding-left: 35px;
+    }
+    .cb-category-inner-slider-wrapper.pl-58 {
+        padding-left: 0;
+    }
+    .cb-offer-cta-content-subtitle {
+        font-size: 20px;
+    }
+    .cb-offer-cta-content-title {
+        font-size: 50px;
+    }
+    .cb-section-title {
+        font-size: 32px;
+    }
+    .product-main-info .name {
+        font-size: 30px;
+    }
+    .team-about-details-wrapper.pl-30 {
+        padding-left: 10px;
+    }
+    .banner-3 .banner-slider {
+        padding: 90px 0;
+    }
+    .available-head {
+        font-size: 32px;
+    }
+    .about-title {
+        font-size: 32px;
+    }
+    .sec-title {
+        font-size: 32px;
+    }
+    .app-title {
+        font-size: 32px;
+    }
+    .banner-2 .banner-bg {
+        height: 700px;
+    }
+    .pricing-2 .plan-price {
+        font-size: 36px;
+    }
+    .pricing-2 .custom-btn-alt {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
+    .customer-1 .review-pagination {
+        margin-left: 25px;
+    }
+    .hero4-title {
+        font-size: 55px;
+    }
+    .hero-sub-title { 
+        font-size: 22px;
+    }
+}
+
+@media screen and (max-width:991px) {
+    .height-955 {
+        height: 780px;
+    }
+    .cb-item-info-img.pr-50 {
+        padding-right: 0;
+    }
+    .cb-item-info-img.pl-50 {
+        padding-left: 0;
+    }
+    .banner-bg.slider5-height {
+        height: 780px;
+    }
+    .hero-area4 {
+        background-size: cover;
+      }
+    br {
+        display: none;
+    }
+    .single-service-right-bar.pl-20 {
+        padding-left: 0;
+    }
+    .sidebar-default.pl-25 {
+        padding-left: 0;
+    }
+    .delivery {
+        background-size: cover;
+    }
+    .delivery-img img {
+        top: 0;
+    }
+    .about-3 .about-img {
+        padding-bottom: 10px;
+    }
+    .about-content.pl-50 {
+        padding-left: 0;
+    }
+    .about-3 .about-content {
+        padding-left: 0;
+    }
+    .about.about-2 .about-img {
+        padding-bottom: 10px;
+    }
+    .smpadright40 .footer-content-wrapper {
+        padding-right: 40px;
+    }
+    .padleft40 .footer-content-wrapper {
+        padding-left: 0px;
+    }
+    .delivery {
+        background-size: cover;
+    }
+    .about .h-100.pl-40 {
+        padding-left: 0;
+    }
+    ul.right-social-ul {
+        top: 15%;
+    }
+    ul.nav-menu {
+        display: block;
+        background: #ffffff;
+        height: 100vh;
+        position: fixed;
+        right: -100%;
+        top: 0;
+        width: 250px;
+        padding: 10px;
+        box-shadow: -2px 1px 20px 1px #00000024;
+        backdrop-filter: blur(3px);
+        transition: .3s;
+        z-index: 99;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .bars {
+        display: block;
+    }
+    .dp-menu {
+        width: 100%;
+    }
+    .close-menu {
+        display: flex;
+    }
+    #search {
+        display: none;
+    }
+    /* ===========banner========= */
+    .banner-title {
+        font-size: 46px;
+    }
+    .banner.banner-1 {
+        height: 560px;
+        padding-top: 100px;
+    }
+    .bannerSlider .swiper-wrapper {
+        padding: 15px 0;
+    }
+    /* =======app====== */
+    img.app-one {
+        display: none;
+    }
+    img.app-tow {
+        width: 90%;
+    }
+    .app-section.app-section-1 {
+        margin-top: 0;
+        margin-bottom: 25px;
+    }
+    .bg-availa {
+        padding: 50px 0;
+    }
+    .availability {
+        margin-bottom: 105px;
+    }
+    .review {
+        padding: 25px;
+        padding-bottom: 40px;
+    }
+    .review p {
+        padding: 10px 0;
+    }
+    .right-menu-icon {
+        margin-left: 0;
+        margin-right: 5px;
+    }
+    ul.about-ul li {
+        width: 100%;
+    }
+    .subs-title {
+        font-size: 28px;
+    }
+    .btn-sec .custom-btn {
+        padding: 10px 20px;
+    }
+}
+
+@media screen and (max-width:767px) {
+    .hero4-title {
+        font-size: 52px;
+    }
+    .cb-category-inner-text.pl-50 {
+        padding-left: 30px;
+    }
+    .cb-category-inner-slider-wrapper.pl-58 {
+        padding-left: 30px;
+    }
+    .hero-sub-title { 
+        font-size: 20px;
+    }
+    .delivery {
+        background-position: center;
+        text-align: center;
+    }
+    .cb-team-single-name {
+        font-size: 20px;
+    }
+    .cb-offer-cta-content-subtitle {
+        font-size: 20px;
+    }
+    .cb-offer-image img {
+        max-width: 150px;
+    }
+    .cb-offer-cta-content-title {
+        font-size: 45px;
+    }
+    .cb-section-title {
+        font-size: 32px;
+    }
+    .about.about-1 .about-img {
+        padding-bottom: 20px;
+    }
+    .product-main-info .name {
+        font-size: 28px;
+    }
+    .blog-details-content {
+        padding: 40px 35px;
+    }
+    .signle-comment-title {
+        font-size: 20px;
+    }
+    .blog-details-title {
+        font-size: 28px;
+    }
+    .shop-notice-result {
+        margin-bottom: 10px;
+    }
+    .page-head {
+        font-size: 32px;
+    }
+    .team-about-details-wrapper.pl-30 {
+        padding-left: 0;
+    }
+    .banner-3 .banner-slider {
+        padding-top: 60px;
+    }
+    .pricing.pricing-2.cpy-6 {
+        padding-bottom: 60px;
+    }
+    .sec-sm-title {
+        font-size: 18px;
+    }
+    .banner-1 .text-inner {
+        padding-top: 30px;
+    }
+    .call-sec-title {
+        font-size: 28px;
+    }
+    .pricing-card-sec {
+        margin-top: 10px;
+    }
+    .delivery-img {
+        display: none;
+    }
+    .about-title {
+        font-size: 28px;
+    }
+    .title {
+        font-size: 28px;
+    }
+    .sec-title {
+        font-size: 28px;
+    }
+    .available-head {
+        font-size: 28px;
+    }
+    .note-title {
+        font-size: 28px;
+    }
+    .app-title {
+        font-size: 28px;
+    }
+    .sm-title {
+        font-size: 18px;
+    }
+    .banner-1 .slider-item-img {
+        margin-top: 30px;
+    }
+    ul.right-social-ul {
+        top: 15%;
+    }
+    .banner-1 h1.banner-title {
+        font-size: 36px;
+    }
+    .banner-title {
+        font-size: 36px;
+    }
+    .right-bar {
+        padding: 0;
+    }
+    .text-inner {
+        text-align: center;
+    }
+    .banner-btn-sec {
+        justify-content: center;
+    }
+    .app-img {
+        display: none;
+    }
+    .app-feature {
+        padding: 40px 30px;
+        padding-bottom: 45px;
+    }
+    .subscribe {
+        padding: 40px 0;
+    }
+    .review-title {
+        font-size: 22px
+    }
+    .pricing-card.active {
+        transform: scale(1);
+    }
+    .availability {
+        margin-top: 0;
+        margin-bottom: 325px;
+    }
+    .reply-comment {
+        margin-left: 0;
+    }
+    .single-comment {
+        display: flex;
+        align-items: initial;
+    }
+    img.cat-icon {
+        width: 50px;
+    }
+    .cat-name {
+        font-size: 15px;
+    }
+    .cat-menu-li {
+        margin: 0 5px;
+    }
+    .cat-menu-li {
+        padding: 5px 5px;
+    }
+    .describe {
+        padding: 70px 0;
+    }
+    .video-area {
+        padding-top: 60px;
+        height: 300px;
+    }
+    .delivery-area-3 .video-area {
+        height: 385px;
+        padding-top: 75px;
+    }
+    .form-wrapper {
+        margin-top: -150px;
+    }
+    .image-content {
+        margin-bottom: 0 !important;
+    }
+    .social-sec {
+        display: none;
+    }
+    .service-list {
+        margin-bottom: 0 !important;
+    }
+    .pricing-card-sec.cmy-5 {
+        margin-bottom: 0;
+    }
+    .m-mr-0 {
+        margin-bottom: 0;
+    }
+    .partner-bg {
+        padding: 45px 0;
+    }
+    .footer-section {
+        padding-top: 50px;
+    }
+    .last-footer {
+        margin-top: 40px;
+    }
+    .post-title {
+        font-size: 18px;
+    }
+}
+
+@media screen and (max-width:500px) {
+    .cb-category-inner-text.pl-50 {
+        padding-left: 12px;
+        padding-right: 12px;
+        text-align: center;
+    }
+    .cb-category-inner-slider-wrapper.pl-58 {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .coupon-form {
+        display: block;
+        margin-bottom: 20px;
+    }
+    .sign-about img {
+        max-width: 145px;
+    }
+    .blog-details-content {
+        padding: 40px 25px;
+    }
+    .coupon-form input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .btn-sec .custom-btn {
+        padding: 10px 20px;
+    }
+    .describe {
+        padding: 50px 0;
+    }
+    .service-des {
+        margin-bottom: 0 !important;
+    }
+    .shopping-btn .custom-btn {
+        padding: 10px 25px;
+    }
+}
+@media (max-width: 575px) {
+    .hero-sub-title {
+        font-size: 18px;
+    }
+    .cb-offer-cta-content {
+        padding: 0 15px;
+    }
+    .cb-offer-cta-content-subtitle {
+        font-size: 20px;
+    }
+    .cb-offer-cta-content-title {
+        font-size: 36px;
+    }
+    .hero-trending-wrap strong {
+        font-size: 16px;
+    }
+    .hero4-search {
+        width: calc(100%);
+    }
+    .height-955 {
+        height: 650px;
+    }
+    .banner-bg.slider5-height {
+        height: 650px;
+    }
+    .hero4-title {
+        font-size: 46px;
+    }
+    .smpadright40 .footer-content-wrapper {
+        padding-right: 0;
+    }
+    .postbox__title {
+        font-size: 24px;
+    }
+    .page-banner {
+        padding: 60px 0;
+    }
+    .page-head {
+        font-size: 32px;
+    }
+    .padright40 .footer-content-wrapper {
+        padding-right: 0;
+    }
+    .watch {
+        margin-left: 25px;
+    }
+    ul.about-ul {
+        display: block;
+    }
+    .post-title {
+        font-size: 20px;
+    }
+}
+@media screen and (max-width:400px) {
+    .hero4-title {
+        font-size: 36px;
+    }
+    .cb-offer-cta-content {
+        padding: 0;
+    }
+    .cb-section-title {
+        font-size: 28px;
+    }
+    .order-feature-title {
+        font-size: 20px;
+    }
+    .cb-top-restaurant-title {
+        font-size: 20px;
+    }
+    .cb-team-single-name {
+        font-size: 20px;
+    }
+    .home4-blog .post-title { 
+        font-size: 20px;
+    }
+    .hero4-search {
+        width: 100%;
+    }
+    .banner-bg {
+        padding: 10px;
+    }
+    .side-info {
+        padding: 40px 30px;
+    }
+    .banner .custom-btn {
+        padding: 10px 15px;
+    }
+    .cart-menu {
+        right: 12px;
+        width: auto;
+        left: 12px;
+    }
+    .nav-list {
+        position: initial;
+    }
+    .commenter-name {
+        font-size: inherit;
+    }
+    .commenter-img img {
+        width: 50px;
+    }
+    .delivery {
+        height: auto;
+        display: block;
+        padding: 30px 25px;
+        padding-bottom: 35px;
+    }
+    .store img {
+        width: 110px;
+        margin: 5px;
+    }
+}
