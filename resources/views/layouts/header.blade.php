@@ -100,7 +100,7 @@
                                         href="{{url('/store')}}">Store</a></li>
                                           <li id="menu-item-21"
                                     class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21"><a
-                                        href="{{url('/news')}}">News1</a></li>
+                                        href="{{url('/news')}}">News</a></li>
                                 <li id="menu-item-21"
                                     class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21"><a
                                         href="{{url('/about')}}">About Us</a></li>
