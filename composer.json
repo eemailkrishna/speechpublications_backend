@@ -77,7 +77,8 @@
             "php-http/discovery": true
         },
         "platform": {
-            "php": "8.2.30"
+            "php": "8.2.30",
+            "ext-sodium": "8.2.30"
         }
     },
     "minimum-stability": "dev",
