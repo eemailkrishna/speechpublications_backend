@@ -4415,7 +4415,7 @@ span {
   border-radius: 10px;
   position: relative;
   overflow: hidden;
-  height: 285px;
+
 }
 .shop-box-items .book-thumb img {
   max-width: 100%;
@@ -5083,11 +5083,10 @@ span {
 }
 .shop-box-items .book-thumb {
   background-color: var(--bg);
-  padding: 30px;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
-  height: 292px;
+
 }
 .shop-box-items .book-thumb img {
   max-width: 100%;
@@ -5474,7 +5473,6 @@ span {
 }
 .book-shop-wrapper .cta-shop-box .girl-shape img {
   transform: scaleX(-1);
-  height: 285px;
 }
 .book-shop-wrapper .cta-shop-box .boy-shape {
   position: absolute;

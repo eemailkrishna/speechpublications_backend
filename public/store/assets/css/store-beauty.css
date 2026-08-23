@@ -4,6 +4,15 @@
    ========================================================= */
 
 /* ---------- Breadcrumb ---------- */
+
+.book-thumb {
+    width: 220px!important;
+    height: 320px!important;
+    }
+
+.shop-box-items{
+    padding: 8px!important;
+}
 .breadcrumb-wrapper {
     background: linear-gradient(135deg, #0b4cff14 0%, #7ab2781a 60%, #FED0491a 100%) !important;
     border-bottom: 1px solid rgba(122, 178, 120, .15);
@@ -25,7 +34,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 2px;
     flex-wrap: wrap;
     padding: 14px 18px;
     background: #fff;
@@ -49,14 +58,15 @@
 
 /* ---------- Shop cards ---------- */
 .shop-box-items {
+    margin-top: 0px;
     background: #fff;
     border-radius: 18px;
-    padding: 14px;
+    padding: 0px;
     box-shadow: 0 6px 24px rgba(17, 17, 44, .06);
     transition: transform .35s ease, box-shadow .35s ease;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    border: 1px solid #edf0f3;
 }
 
 .shop-box-items:hover {
@@ -65,10 +75,12 @@
 }
 
 .shop-box-items .book-thumb {
-    background: linear-gradient(160deg, #f3f6f4 0%, #e9f0e9 100%);
+    padding-top: 0px !important;
+    background: linear-gradient(
+160deg, #f3f6f4 0%, #e9f0e9 100%);
     border-radius: 12px;
-    height: 250px;
-    padding: 22px;
+    /* height: 250px; */
+    padding: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,8 +88,7 @@
 }
 
 .shop-box-items .book-thumb img {
-    height: 100% !important;
-    width: auto !important;
+   
     object-fit: contain;
     filter: drop-shadow(0 14px 20px rgba(17, 17, 44, .18));
     transition: transform .45s ease;
@@ -131,17 +142,17 @@
 
 /* Content */
 .shop-box-items .shop-content {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
+    margin-top: 8px;
+  
     flex: 1;
 }
 
 .shop-box-items .shop-content h3 {
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.4;
-    margin-bottom: 6px;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
 }
 
 .shop-box-items .shop-content h3 a {
@@ -154,28 +165,53 @@
 }
 
 .shop-box-items .shop-content .price-list1 {
-    margin: 0 0 6px;
+    margin: 0 0 8px;
     padding: 0;
     list-style: none;
 }
 
 .shop-box-items .shop-content .price-list1 li {
-    font-size: 15px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--theme);
     line-height: 1.7;
 }
 
+.shop-box-items .shop-content .price-list1 li:first-child {
+    color: #5dbb7d;
+}
+
 /* Rating stars */
+.shop-box-items .shop-content .shop-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 10px;
+    margin: 4px 0 8px;
+}
+
 .shop-box-items .shop-content .fa-star,
-.shop-box-items .shop-content .fa-star-half-stroke {
+.shop-box-items .shop-content .fa-star-half-stroke,
+.shop-box-items .shop-content .fa-regular.fa-star {
     color: #f7b500 !important;
-    font-size: 14px;
-    margin-right: 1px;
+    font-size: 12px;
+    line-height: 1;
+   
+    vertical-align: middle;
+}
+
+.shop-box-items .shop-content .fa-regular.fa-star {
+    opacity: 0.9;
 }
 
 .shop-box-items .shop-content .product-title-css p {
     margin-bottom: 0;
+}
+
+.shop-box-items .shop-content .product-title-css {
+    margin-top: 6px;
+    font-size: 15px;
+    line-height: 1.4;
 }
 
 .shop-box-items .shop-content .product-title-css span {
@@ -185,7 +221,7 @@
 /* Add to cart */
 .shop-box-items .shop-button {
     margin-top: auto;
-    padding-top: 14px;
+    padding-top: 8px;
 }
 
 .shop-box-items .shop-button .theme-btn {
@@ -205,7 +241,7 @@
 
 /* ---------- Sidebar widgets ---------- */
 .main-sidebar .single-sidebar-widget {
-    padding: 26px 24px;
+    padding: 16px 16px;
     border: none;
     border-radius: 16px;
     background: #fff;
@@ -331,4 +367,45 @@
 .page-nav-wrap .pagination .page-item .page-link:hover {
     background: var(--theme);
     color: #fff;
+}
+
+/* Mobile adjustments for card layout and text fields */
+@media (max-width: 767px) {
+    .shop-box-items {
+        padding: 10px;
+        border-radius: 14px;
+    }
+
+    .shop-box-items .book-thumb img {
+      
+       
+    }
+
+    .shop-box-items .shop-content h3 {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    .shop-box-items .shop-content .price-list1 li {
+        font-size: 18px;
+    }
+
+    .shop-box-items .shop-content .shop-rating {
+        margin: 4px 0 6px;
+    }
+
+    .shop-box-items .shop-button .theme-btn {
+        padding: 10px 12px;
+        font-size: 15px;
+    }
+
+    /* allow author to wrap on small screens */
+    .product-author {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+    }
+
+    /* hide desktop cursor follower on touch devices */
+    .cursor-follower { display: none !important; }
 }
