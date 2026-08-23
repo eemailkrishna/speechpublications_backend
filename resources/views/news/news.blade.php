@@ -47,7 +47,7 @@
 </style>
 
 <!-- Breadcumb Section Start -->
-<div class="breadcrumb-wrapper bg-cover section-padding"
+<div class="breadcrumb-wrapper bg-cover section-paddingn "
     style="background: #0b4cff14;">
     <div class="container">
         <div class="page-heading">
@@ -78,10 +78,13 @@
 
             @if(isset($featured) && $featured)
             <div class="col-9">
-                <div class="blog-post-details">
+                <div class="blog-post-details " >
                     <div class="single-blog-post">
                         <a href="{{ route('news.details', $featured->slug) }}" class="post-featured-thumb bg-cover d-block"
-                            style="background-image: url('{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}'); min-height: 400px;"></a>
+                            >
+                        
+                        <img src="{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 400px; border-radius:20px">
+                        </a>
                         <div class="post-content mt-4">
                             <ul class="post-list d-flex align-items-center">
                                 <li>
@@ -106,13 +109,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            @endif
-             <div class="col-xl-3 col-lg-3">
-                @include('news.partials.sidebar')
-            </div>
-
-            <div class="col-xl-9 col-lg-8">
+                  <div class="col-xl-9 col-lg-8 " style="margin-top: 30px;">
                 @if($search)
                 <div class="woocommerce-notices-wrapper wow fadeInUp" data-wow-delay=".3s">
                     <p>Search results for: <strong>{{ $search }}</strong></p>
@@ -136,6 +133,13 @@
                     </button>
                 </div>
             </div>
+            </div>
+            @endif
+             <div class="col-xl-3 col-lg-3">
+                @include('news.partials.sidebar')
+            </div>
+
+          
 
            
 

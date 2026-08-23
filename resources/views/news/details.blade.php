@@ -105,10 +105,10 @@
         <div class="news-details-area">
             <div class="row g-5">
                 <div class="col-xl-9 col-lg-8">
-                    <div class="blog-post-details">
+                    <div class="blog-post-details1">
                         <div class="single-blog-post">
-                            <div class="post-featured-thumb bg-cover"
-                                style="background-image: url('{{ $news->featured_image ? $news->featured_image : asset('store/assets/img/news/post-4.jpg') }}');"></div>
+                            <img class="post-featured-thumb bg-cover" src="{{ $news->featured_image ? $news->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 400px; border-radius:20px">
+                            
                             <div class="post-content">
                                 <ul class="post-list d-flex align-items-center">
                                     <li>
@@ -128,8 +128,8 @@
                                         {{ $news->publish_date ? $news->publish_date->format('d M, Y') : now()->format('d M, Y') }}
                                     </li>
                                 </ul>
-                                <h3>{{ $news->title }}</h3>
-                                <div class="news-description">
+                                <h3 style="font-size: 30px; font-weight: 700;">{{ $news->title }}</h3>
+                                <div class="news-description2">
                                     {!! $news->description !!}
                                 </div>
                             </div>
