@@ -145,9 +145,9 @@
                                  @foreach($products as $product)
                               
 
-                                 <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp  " data-wow-delay=".2s" style="margin-bottom: 25px;">
+                                 <div class="col-xl-3 col-lg-4 col-md-6   wow fadeInUp  " data-wow-delay=".2s" style="margin-bottom: 40px; margin-top: 25px;">
                                      <div class="shop-box-items">
-                                         <div class="book-thumb center" style="position: relative;">
+                                         <div class="book-thumb center" style="position: relative;height:auto;">
                                                  @php
                                                 $images = json_decode($product->image, true) ?? [];
                                                 $imageUrl = !empty($images) && isset($images[0])
@@ -156,7 +156,7 @@
                                             @endphp
 
                                             <a href="{{ url('/book-details/'.$product->slug) }}">
-                                                <img src="{{ $imageUrl }}" alt="img">
+                                                <img  src="{{ $imageUrl }}" alt="img">
                                             </a>
                                             
                                                 @if($product->status =='coming-soon')
@@ -170,21 +170,7 @@
                                             </span>
                                             @endif
 
-                                             <ul class="shop-icon d-grid justify-content-center align-items-center">
-                                                 <li>
-                                                     <a href="{{url('/cart')}}"><i class="far fa-heart"></i></a>
-                                                 </li>
-                                                 <li>
-                                                     <a href="{{url('/cart')}}">
-                                                         <img class="icon"
-                                                             src="{{asset('/store/assets/img/icon/shuffle.svg')}}"
-                                                             alt="svg-icon">
-                                                     </a>
-                                                 </li>
-                                                 <li>
-                                                     <a href="{{url('/book-details/'.$product->slug)}}"><i class="far fa-eye"></i></a>
-                                                 </li>
-                                             </ul>
+                                             
                                          </div>
                                          <div class="shop-content">
                                              <h3 class="product-title-css"><a href="{{url('/book-details/'.$product->slug)}}">{{$product->name}}</a></h3>
