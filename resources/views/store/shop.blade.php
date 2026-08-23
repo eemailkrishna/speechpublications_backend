@@ -5,7 +5,7 @@
  <style>
         @media (min-width: 991px) {
             .product-title-css{
-                min-height: 50px;
+                min-height: 40px;
                 overflow: hidden;
             }
         }
@@ -145,7 +145,7 @@
                                  @foreach($products as $product)
                               
 
-                                 <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".2s">
+                                 <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp  " data-wow-delay=".2s" style="margin-bottom: 25px;">
                                      <div class="shop-box-items">
                                          <div class="book-thumb center" style="position: relative;">
                                                  @php
@@ -188,7 +188,7 @@
                                          </div>
                                          <div class="shop-content">
                                              <h3 class="product-title-css"><a href="{{url('/book-details/'.$product->slug)}}">{{$product->name}}</a></h3>
-                                            <ul class="price-list1" @if($product->is_ebook != 1) style="margin-top: 28px;" @endif>
+                                            <ul class="price-list1" @if($product->is_ebook != 1) style="margin-top: 10px;" @endif>
                                                 <li class="flex gap-1 align-items-start">Physical Book : ₹{{ $product->price }}/-</li>
                                                 @if($product->is_ebook == 1)
                                                     <li>E-Book : ₹{{ $product->ebook_price }}/-</li>

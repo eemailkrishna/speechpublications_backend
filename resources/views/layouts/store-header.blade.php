@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{asset('/store/assets/css/bootstrap.min.css')}}">
     <!--<< All Min Css >>-->
     <link rel="stylesheet" href="{{asset('/store/assets/css/all.min.css')}}">
+    <!-- FontAwesome CDN fallback to ensure icons render correctly -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!--<< Animate.css >>-->
     <link rel="stylesheet" href="{{asset('/store/assets/css/animate.css')}}">
     <!--<< Magnific Popup.css >>-->
