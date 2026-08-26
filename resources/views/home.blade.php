@@ -21,12 +21,43 @@
         }
         .content.show { max-height: 2000px; }
         .content.show::after { display: none; }
+
+        /* Homepage responsive adjustments */
+        .wrapper { padding: 0 15px; }
+        .banner_slider .bg_img { width: 100%; height: auto; object-fit: cover; display:block; }
+        .vision_item figure img { width:232px; height:232px; object-fit:cover; }
+        .card-book img { width:100%; max-width:200px; height:auto; margin:0 auto; display:block; }
+        .book-thumb { width:200px; height:200px; object-fit:cover; display:block; margin:0 auto; }
+
+        @media (max-width: 992px) {
+            .vision_item figure img { width:160px; height:160px; }
+            .home-highlights-popular .col-md-4 { flex: 0 0 50%; max-width:50%; }
+            .home-highlights-popular .col-6.col-md-3 { flex: 0 0 33.3333%; max-width:33.3333%; }
+        }
+
+        @media (max-width: 768px) {
+            .vision_item figure img { width:120px; height:120px; }
+            .home-highlights-popular .col-md-4 { flex: 0 0 100%; max-width:100%; }
+            .home-highlights-popular .col-6.col-md-3 { flex: 0 0 50%; max-width:50%; }
+            .card-book { padding: 8px; }
+            .book-thumb { max-width:100%; width:100%; height:auto; }
+            .mt-10 { margin-top: 10px; }
+            .banner_slider .wrapped { padding: 12px 0; }
+            .description_box .content { max-height: 100px; }
+            .review_item .heading_box { gap:8px; }
+        }
+
+        @media (max-width: 480px) {
+            .vision_item figure img { width:80px; height:80px; }
+            .card-book img { max-width:150px; }
+            .description_box h4, .h2, .h1 { font-size: 1rem; }
+            .common_btn { padding: 8px 12px; font-size: 14px; }
+            .review_item .heading_box figure img { width:64px; height:64px; }
+            .intro_box h2 { font-size: 1.25rem; }
+        }
     </style>
 <section class="banner_slider" style="background:#003366">
-    <div class="slide_count">
-        <span class="current_slide"></span>
-        <span class="total_slide"></span>
-    </div>
+
     <div class="slider_box">
         <div class="slide banner_container position-relative">
             <ul class="elements" style="background:#003366">
@@ -82,44 +113,64 @@
         
     </div>
 </section>
-<section class="who_we_are section_with_bg ">
+<section class="home-highlights-popular section_with_bg">
     <div class="wrapper">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-md-6">
-                <div class="img-col position-relative text-center" data-aos="fade-right">
-                    <img src="{{url("public/images/logo/Logo2.webp")}}" alt="App Store" width="587" height="534">
+        <div class="row justify-content-center align-items-start">
+            <div class="col-12 mb-4">
+                <h6 class="h6 sub_heading primary_text" data-aos="fade-down">Highlights</h6>
+                <h2 class="h2 primary_text mb-3" data-aos="fade-down">Highlighted News</h2>
+                <div class="row g-3">
+                    @forelse($highlights as $h)
+                        <div class="col-md-3" data-aos="fade-up" style="margin-top: 20px;">
+                            <div class="card h-100">
+                                @if($h->featured_image)
+                                    <img src="{{ $h->featured_image }}" class="card-img-top" alt="{{ $h->title }}">
+                                @endif
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $h->title }}</h5>
+                                    <p class="card-text">{{ Str::limit(strip_tags($h->excerpt ?? $h->description), 120) }}</p>
+                                    <a href="{{ url('/news/'.$h->slug) }}" class="btn btn-sm btn-primary">Read</a>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">No highlights yet.</div>
+                    @endforelse
                 </div>
             </div>
-            <div class="col-md-6 mb-md-0 mb-4 mt-md-5 pt-4">
-                <div class="text-col w-100 text-md-left text-center ">
-                    <h6 class="h6 sub_heading primary_text  mb-lg-4 mb-3 " data-aos="fade-down">About Us</h6>
-                    <h2 class="h2 primary_text mb-lg-4 mb-3 pb-lg-3" data-aos="fade-down">Speech
-                        <span>Publications</span></h2>
-                    <div class="content  mb-lg-4 mb-3 pb-lg-3" data-aos="fade-down">
-                        <p>Speech Publications is a leading publishing institution dedicated to literary expression,
-                            intellectual discourse, and social awareness. This organization not only promotes
-                            contemporary literature and ideological discussions but also publishes high-quality books
-                            across a diverse range of subjects including education, research, sociology, lifestyle,
-                            psychology, history, and children's literature.</p>
-                        <p>We firmly believe that writing is not merely an embellishment of words, but a powerful medium
-                            to awaken and sensitize society. With this belief, we provide a platform for both emerging
-                            and established authors to not only share their creativity but also present ideas that can
-                            inspire and impact society in a meaningful way.
-                        </p>
-                        <p>The core objective of Speech Publications is to create a strong intellectual bridge between
-                            readers and writers, focusing on readability, authenticity, and quality. We believe that
-                            creative literature and thoughtful writing can lay the foundation for social change, and we
-                            are constantly working in this direction.
-                        </p>
-                        <p>Every book we publish is the beginning of a dialogue — a philosophy that connects the
-                            thoughts of the reader with the emotions of the writer.
-                        </p>
-                    </div> <a class="common_btn" href="{{url('/about')}}" data-aos="zoom-in" target="_self">About Us</a>
+
+            <div class="col-12 mt-5">
+                <h6 class="h6 sub_heading primary_text" data-aos="fade-down">Popular Books</h6>
+                <h2 class="h2 primary_text mb-3" data-aos="fade-down">Trending Books</h2>
+                <div class="row g-3">
+                    @forelse($popularBooks as $p)
+                        <div class="col-12 col-sm-6 col-md-3" data-aos="fade-up" style="margin-top: 20px;">
+                            <div class="card card-book h-100 text-center p-2">
+                                @if($p->image)
+                                    @php
+                                        $images = json_decode($p->image, true) ?? [];
+                                        if (!empty($images) && isset($images[0])) {
+                                            $imgUrl = Storage::disk('s3')->url('product/'.$images[0]);
+                                        } else {
+                                            $imgUrl = asset('images/no-image.png');
+                                        }
+                                    @endphp
+                                    <a href="{{ url('/book-details/'.$p->slug) }}"><img src="{{ $imgUrl }}" alt="{{ $p->name }}" class="img-fluid mb-2 book-thumb"></a>
+                                @endif
+                                <h6 class="mb-1"><a href="{{ url('/book-details/'.$p->slug) }}">{{ $p->name }}</a></h6>
+                                <div class="text-muted">₹{{ number_format($p->price,2) }}</div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">No popular books yet.</div>
+                    @endforelse
                 </div>
             </div>
         </div>
     </div>
-    <div class="vision_mission ">
+</section>
+
+<div class="vision_mission ">
         <div class="wrapper position-relative">
             <div class="row">
                 <div class="col-md-4 mb-md-0 mb-5">
@@ -130,7 +181,7 @@
                         <h4 class="h4 primary_text text-center">Our Mission</h4>
                         <p class="text-center">The mission of Speech Publications is to promote a culture of meaningful
                             dialogue between readers and writers by publishing high-quality content in literature,
-                            education, research, thought, and creative expressions such as poetry.  </p>
+                            education, research, thought, and creative expressions such as poetry.  </p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-md-0 mb-5">
@@ -141,7 +192,7 @@
                         <h4 class="h4 primary_text text-center">Our Vision</h4>
                         <p class="text-center">The vision of Speech Publications is to help build a society where
                             literature, thought, and creativity are encouraged, and where awareness, sensitivity, and
-                            positive transformation are made possible through the power of words. </p>
+                            positive transformation are made possible through the power of words. </p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-md-0 mb-5">
@@ -157,7 +208,6 @@
             </div>
         </div>
     </div>
-</section>
 
 <section class="review_sec position-relative  section_with_bg ">
     <img class="bg_img" src="images/Testimonial-Background-Elements-1.png" alt="WePro-Solutions" width="1830"
@@ -234,6 +284,5 @@
     </div>
 </section>
 
-
-
+ 
 @endsection

@@ -86,6 +86,10 @@
                                     <a href="{{url('/product-category-create')}}" class="nav-link">Create</a>
                                 </li>
 
+                                <li class="nav-item">
+                                    <a href="{{url('/admin/popular-books')}}" class="nav-link">Popular Books</a>
+                                </li>
+
                             </ul>
                         </div>
                     </li>

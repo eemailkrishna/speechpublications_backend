@@ -25,11 +25,13 @@ class News extends Model
         'status',
         'meta_title',
         'meta_description',
+        'is_highlight',
     ];
 
     protected $casts = [
         'publish_date' => 'datetime',
         'featured' => 'boolean',
+        'is_highlight' => 'boolean',
     ];
 
     public function author()

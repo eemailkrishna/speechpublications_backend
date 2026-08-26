@@ -7,14 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('story_views', function (Blueprint $table) {
+        if (! Schema::hasTable('story_views')) {
+            Schema::create('story_views', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('story_id')->constrained('stories')->onDelete('cascade');
             $table->foreignId('viewer_id')->constrained('users')->onDelete('cascade');
             $table->timestamp('viewed_at')->useCurrent();
             $table->timestamps();
             $table->unique(['story_id','viewer_id']);
-        });
+            });
+        }
     }
 
     public function down()

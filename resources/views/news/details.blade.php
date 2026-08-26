@@ -107,7 +107,7 @@
                 <div class="col-xl-9 col-lg-8">
                     <div class="blog-post-details1">
                         <div class="single-blog-post">
-                            <img class="post-featured-thumb bg-cover" src="{{ $news->featured_image ? $news->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 400px; border-radius:20px">
+                            <img class="post-featured-thumb bg-cover" src="{{ $news->featured_image ? $news->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 600px; border-radius:20px">
                             
                             <div class="post-content">
                                 <ul class="post-list d-flex align-items-center">
