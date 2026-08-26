@@ -188,7 +188,7 @@ class NewsController extends Controller
     protected function uploadImage($file)
     {
         $name = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-        $path = Storage::disk('s3')->putFileAs('uploads/news', $file, $name);
+        $path = Storage::disk('s3')->putFileAs('uploads/news', $file, $name, 'public');
         return Storage::disk('s3')->url($path);
     }
 
@@ -225,21 +225,5 @@ class NewsController extends Controller
         News::where('featured', true)
             ->where('id', '!=', $newsId)
             ->update(['featured' => false]);
-    }
-
-    public function toggleHighlight(Request $request, $id)
-    {
-        try {
-            $news = News::findOrFail($id);
-            $new = ! (bool) $news->is_highlight;
-            $news->update(['is_highlight' => $new]);
-
-            return response()->json([
-                'success' => true,
-                'is_highlight' => (bool) $new,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
     }
 }

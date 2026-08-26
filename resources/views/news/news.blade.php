@@ -44,7 +44,6 @@
         float: right;
         margin-left: 1.5rem;
     }
-
 </style>
 
 <!-- Breadcumb Section Start -->
@@ -78,13 +77,13 @@
         <div class="row g-4">
 
             @if(isset($featured) && $featured)
-            <div class=" col-lg-9 col-md-12">
+            <div class="col-9">
                 <div class="blog-post-details " >
                     <div class="single-blog-post">
                         <a href="{{ route('news.details', $featured->slug) }}" class="post-featured-thumb bg-cover d-block"
                             >
                         
-                        <img class="image-css" src="{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%;  border-radius:20px">
+                        <img src="{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 400px; border-radius:20px">
                         </a>
                         <div class="post-content mt-4">
                             <ul class="post-list d-flex align-items-center">
@@ -116,7 +115,7 @@
                     <p>Search results for: <strong>{{ $search }}</strong></p>
                 </div>
                 @endif
-                <div class="row " id="news-grid" style="margin-left:50px">
+                <div class="row g-4" id="news-grid">
                     @forelse($news as $item)
                     @include('news.partials.card', ['item' => $item])
                     @empty

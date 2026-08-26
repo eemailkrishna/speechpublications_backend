@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        if (! Schema::hasTable('news_authors')) {
-            Schema::create('news_authors', function (Blueprint $table) {
+        Schema::create('news_authors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('full_name');
             $table->string('slug')->unique();
@@ -26,8 +25,7 @@ return new class extends Migration {
             $table->string('instagram_url')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-            });
-        }
+        });
     }
 
     public function down()

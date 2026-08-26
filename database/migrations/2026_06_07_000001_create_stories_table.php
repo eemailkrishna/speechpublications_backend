@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        if (! Schema::hasTable('stories')) {
-            Schema::create('stories', function (Blueprint $table) {
+        Schema::create('stories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('type', ['image','video'])->default('image');
@@ -19,8 +18,7 @@ return new class extends Migration {
             $table->timestamp('expires_at');
             $table->timestamps();
             $table->softDeletes();
-            });
-        }
+        });
     }
 
     public function down()
