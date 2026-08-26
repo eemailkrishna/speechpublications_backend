@@ -23,17 +23,6 @@
             color: inherit;
             text-decoration: none;
         }
-
-
-    .shop-box-items .shop-content .shop-button .theme-btn {
-    background: #003366!important;
-    color: #ffffff!important;
-    width: 100%;
-    padding: 6px 24px;
-    font-size: 10px;
-    }
-
-
  </style>
 
 
@@ -156,7 +145,7 @@
                                  @foreach($products as $product)
                               
 
-                                 <div class="col-xl-3 col-lg-4 col-md-6 col-6  wow fadeInUp  " data-wow-delay=".2s" style="margin-bottom: 40px; margin-top: 25px;">
+                                 <div class="col-xl-3 col-lg-4 col-md-6   wow fadeInUp  " data-wow-delay=".2s" style="margin-bottom: 40px; margin-top: 25px;">
                                      <div class="shop-box-items">
                                          <div class="book-thumb center" style="position: relative;height:auto;">
                                                  @php

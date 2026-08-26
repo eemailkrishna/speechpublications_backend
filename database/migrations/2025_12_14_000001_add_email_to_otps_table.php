@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! Schema::hasColumn('otps', 'email')) {
-            Schema::table('otps', function (Blueprint $table) {
-                $table->string('email')->nullable()->after('phone_number');
-            });
-        }
+        Schema::table('otps', function (Blueprint $table) {
+            // $table->string('email')->nullable()->after('phone_number');
+        });
     }
 
     /**
@@ -23,10 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        if (Schema::hasColumn('otps', 'email')) {
-            Schema::table('otps', function (Blueprint $table) {
-                $table->dropColumn('email');
-            });
-        }
+        Schema::table('otps', function (Blueprint $table) {
+            $table->dropColumn('email');
+        });
     }
 };

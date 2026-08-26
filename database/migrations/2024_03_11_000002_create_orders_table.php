@@ -8,8 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasTable('orders')) {
-            Schema::create('orders', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('razorpay_order_id')->nullable();
@@ -33,8 +32,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index('user_id');
             $table->index('status');
-            });
-        }
+        });
     }
 
     public function down(): void

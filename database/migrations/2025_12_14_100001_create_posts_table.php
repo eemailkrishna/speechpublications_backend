@@ -8,8 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasTable('posts')) {
-            Schema::create('posts', function (Blueprint $table) {
+        Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->longText('content');
@@ -24,8 +23,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->index('user_id');
             $table->index('created_at');
-            });
-        }
+        });
     }
 
     public function down(): void

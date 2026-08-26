@@ -8,8 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasTable('comments')) {
-            Schema::create('comments', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
@@ -25,8 +24,7 @@ return new class extends Migration
             $table->index('post_id');
             $table->index('user_id');
             $table->index('parent_comment_id');
-            });
-        }
+        });
     }
 
     public function down(): void

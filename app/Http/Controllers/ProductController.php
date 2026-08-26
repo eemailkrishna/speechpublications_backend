@@ -230,22 +230,6 @@ class ProductController extends Controller
         }
     }
 
-    public function togglePopular(Request $request, $id)
-    {
-        try {
-            $product = Product::findOrFail($id);
-            $new = ! (bool) $product->is_popular;
-            $product->update(['is_popular' => $new]);
-
-            return response()->json([
-                'success' => true,
-                'is_popular' => (bool) $new,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
-    }
-
     public function OrderHistory(Request $request){
         $userId = null;
         if(Auth::user()->hasRole('admin')){
