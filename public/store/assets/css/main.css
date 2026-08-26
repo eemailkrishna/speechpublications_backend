@@ -745,10 +745,16 @@ span {
   .map-items .googpemap iframe {
     height: 500px;
   }
+  .image-css{
+    height: 600px !important;
+  }
 }
 @media (max-width: 575px) {
   .map-items .googpemap iframe {
     height: 400px;
+  }
+  .image-css{
+    height: auto !important;
   }
 }
 
@@ -3968,7 +3974,7 @@ span {
 }
 @media (max-width: 767px) {
   .news-details-area .blog-post-details .single-blog-post .post-featured-thumb {
-    height: 400px;
+    height: 600px;
   }
 }
 .news-details-area .blog-post-details .single-blog-post .post-content {
@@ -4418,7 +4424,9 @@ span {
 
 }
 .shop-box-items .book-thumb img {
-  max-width: 100%;
+  
+  
+
   transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   -moz-transition: all 0.4s ease-in-out;

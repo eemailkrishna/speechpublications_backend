@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('news_comments', function (Blueprint $table) {
+        if (! Schema::hasTable('news_comments')) {
+            Schema::create('news_comments', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('news_id')->constrained('news')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
@@ -19,7 +20,8 @@ return new class extends Migration {
 
             $table->index('news_id');
             $table->index('status');
-        });
+            });
+        }
     }
 
     public function down()

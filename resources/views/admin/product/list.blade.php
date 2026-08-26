@@ -140,6 +140,11 @@
                                                                     View
                                                                 </button>
                                                             @endif    
+                                                            
+                                                            <div class="form-check form-switch d-inline-block" style="margin: 0 5px;">
+                                                                <input class="form-check-input popular-toggle" type="checkbox" id="popular-{{ $product->id }}" data-id="{{ $product->id }}" {{ $product->is_popular ? 'checked' : '' }}>
+                                                            </div>
+
                                                         <a href="{{ url('/product-edit/' . $product->id) }}" class="btn btn-sm btn-info" style="margin: 0 5px;">Edit</a>
                                                             
                                                             <button type="button" class="btn btn-sm btn-danger" style="margin: 0 5px;" data-delete-url="{{ url('/product-delete/' . $product->id) }}" data-message="Are you sure you want to delete this product?">Delete</button>
@@ -207,6 +212,43 @@
                 paging:false,
                 info:false,
                 dom: 'frtip',
+            });
+
+            // Toggle popular via AJAX (switch)
+            $(document).on('change', '.popular-toggle', function() {
+                var input = $(this);
+                var id = input.data('id');
+                var url = '{{ url('/product/toggle-popular') }}' + '/' + id;
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    beforeSend: function() {
+                        input.prop('disabled', true);
+                    },
+                    success: function(resp) {
+                        if (!resp.success) {
+                            alert('Failed to update: ' + (resp.message || 'unknown'));
+                            input.prop('checked', !input.prop('checked'));
+                        }
+                    },
+                    error: function(xhr) {
+                        var msg = 'Failed to update';
+                        try {
+                            var body = JSON.parse(xhr.responseText || '{}');
+                            msg = body.message || msg;
+                        } catch (e) {}
+                        alert(msg + ' (status ' + xhr.status + ')');
+                        input.prop('checked', !input.prop('checked'));
+                    },
+                    complete: function() {
+                        input.prop('disabled', false);
+                    }
+                });
             });
         });
     </script>

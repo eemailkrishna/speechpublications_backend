@@ -24,7 +24,12 @@ class Product extends Model
         'inside_the_box',
         'category_id',
         'status',
-        
+        'is_popular',
+    ];
+
+    protected $casts = [
+        'is_ebook' => 'boolean',
+        'is_popular' => 'boolean',
     ];
 
     public function order()

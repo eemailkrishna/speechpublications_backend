@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('news', function (Blueprint $table) {
+        if (! Schema::hasTable('news')) {
+            Schema::create('news', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('author_id')->nullable()->constrained('news_authors')->nullOnDelete();
             $table->foreignId('category_id')->nullable()->constrained('news_categories')->nullOnDelete();
@@ -29,7 +30,8 @@ return new class extends Migration {
             $table->index(['status', 'publish_date']);
             $table->index('category_id');
             $table->index('author_id');
-        });
+            });
+        }
     }
 
     public function down()

@@ -8,7 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        if (! Schema::hasTable('messages')) {
+            Schema::create('messages', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sender_id');
             $table->unsignedBigInteger('receiver_id');
@@ -24,7 +25,8 @@ return new class extends Migration
             $table->index('receiver_id');
             $table->index('conversation_id');
             $table->index('is_read');
-        });
+            });
+        }
     }
 
     public function down(): void

@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('news_categories', function (Blueprint $table) {
+        if (! Schema::hasTable('news_categories')) {
+            Schema::create('news_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('slug')->unique();
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
-        });
+            });
+        }
     }
 
     public function down()

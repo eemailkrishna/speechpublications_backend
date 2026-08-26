@@ -8,7 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('otps', function (Blueprint $table) {
+        if (! Schema::hasTable('otps')) {
+            Schema::create('otps', function (Blueprint $table) {
             $table->id();
             $table->string('phone_number', 20)->unique();
             $table->string('otp', 6);
@@ -18,7 +19,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('phone_number');
-        });
+            });
+        }
     }
 
     public function down(): void
