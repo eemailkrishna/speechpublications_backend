@@ -117,8 +117,8 @@
     <div class="wrapper">
         <div class="row justify-content-center align-items-start">
             <div class="col-12 mb-4">
-                <h6 class="h6 sub_heading primary_text" data-aos="fade-down">Highlights</h6>
-                <h2 class="h2 primary_text mb-3" data-aos="fade-down">Highlighted News</h2>
+                <h2 class="h2 sub_heading primary_text" data-aos="fade-down">Highlights</h2>
+        
                 <div class="row g-3">
                     @forelse($highlights as $h)
                         <div class="col-md-3" data-aos="fade-up" style="margin-top: 20px;">
@@ -140,8 +140,7 @@
             </div>
 
             <div class="col-12 mt-5">
-                <h6 class="h6 sub_heading primary_text" data-aos="fade-down">Popular Books</h6>
-                <h2 class="h2 primary_text mb-3" data-aos="fade-down">Trending Books</h2>
+                <h2 class="h2 sub_heading primary_text" data-aos="fade-down">Popular Books</h2>
                 <div class="row g-3">
                     @forelse($popularBooks as $p)
                         <div class="col-12 col-sm-6 col-md-3" data-aos="fade-up" style="margin-top: 20px;">
