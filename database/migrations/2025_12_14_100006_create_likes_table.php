@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('likes')) {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->index('post_id');
             $table->index('comment_id');
         });
+        }
     }
 
     public function down(): void
