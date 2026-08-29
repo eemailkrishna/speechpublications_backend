@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use App\Models\Testimonial;
 use App\Models\News;
 use App\Models\NewsCategory;
+use App\Models\Product;
 
 use Mail;
 use validated;
@@ -19,10 +20,22 @@ use validated;
 class HomeController extends Controller
 {
     public function index(){
-        
         $testimonials = Testimonial::all();
-        
-        return view('home',compact('testimonials'));
+
+        // Highlights: news items marked as is_highlight
+        $highlights = News::where('is_highlight', true)
+            ->where('status', 'published')
+            ->orderBy('publish_date', 'desc')
+            ->take(6)
+            ->get();
+
+        // Popular books: products with is_popular flag
+        $popularBooks = Product::where('is_popular', true)
+            ->orderBy('name')
+            ->take(12)
+            ->get();
+
+        return view('home', compact('testimonials', 'highlights', 'popularBooks'));
     }
 
     public function news(Request $request){
