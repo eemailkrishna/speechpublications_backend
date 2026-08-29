@@ -5,23 +5,75 @@
  <style>
         @media (min-width: 991px) {
             .product-title-css{
-                min-height: 40px;
-                overflow: hidden;
+                min-height: 40px !important;
+                overflow: hidden !important;
             }
         }
 
         /* 2 line heading with ellipsis */
         .product-title-css {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 2 !important;
+            -webkit-box-orient: vertical !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            font-size: 0.95rem !important;
         }
 
         .product-title-css a {
-            color: inherit;
-            text-decoration: none;
+            color: inherit !important;
+            text-decoration: none !important;
+        }
+
+        /* Reduce text sizes */
+        .shop-box-items .price-list1 {
+            font-size: 11px !important;
+        }
+
+        .shop-box-items .price-list1 li {
+            font-size: 12px !important;
+        }
+
+        .shop-box-items .shop-content p {
+            font-size: 12px !important;
+        }
+
+        .shop-box-items .theme-btn {
+            background: #003366 !important;
+            color: #ffffff !important;
+            font-size: 12px !important;
+            padding: 12px 40px !important;
+            border: none !important;
+            width: 100% !important;
+        }
+
+        /* Mobile: 2 cards per row */
+        @media (max-width: 576px) {
+            .col-md-6 {
+                flex: 0 0 50% !important;
+                max-width: 50% !important;
+            }
+
+            /* Mobile specific styles */
+            .shop-box-items h3.product-title-css {
+                font-size: 12px !important;
+            }
+
+            .shop-box-items .price-list1 {
+                font-size: 12px !important;
+            }
+
+            .shop-box-items .price-list1 li {
+                font-size: 12px !important;
+            }
+
+            .shop-box-items .shop-content p {
+                font-size: 12px !important;
+            }
+
+            .shop-box-items .theme-btn {
+                font-size: 10px !important;
+            }
         }
  </style>
 
@@ -145,7 +197,7 @@
                                  @foreach($products as $product)
                               
 
-                                 <div class="col-xl-3 col-lg-4 col-md-6   wow fadeInUp  " data-wow-delay=".2s" style="margin-bottom: 40px; margin-top: 25px;">
+                                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-6   wow fadeInUp  " data-wow-delay=".2s" style="margin-bottom: 40px; margin-top: 25px;">
                                      <div class="shop-box-items">
                                          <div class="book-thumb center" style="position: relative;height:auto;">
                                                  @php
@@ -214,7 +266,7 @@
                                                    
                                               
                                                     @if($product->status != 'coming-soon')
-                                             <div class="shop-button">
+                                             <div class="shop-button" style="padding-bottom: 15px;">
                                                  <form action="{{ route('cart.add', $product->id) }}" method="POST" style="display:inline;">
                                                      @csrf
                                                      <input type="hidden" name="quantity" value="1">
@@ -222,7 +274,7 @@
                                                  </form>
                                              </div>
                                              @else
-                                              <div class="shop-button">
+<div class="shop-button" style="padding-bottom: 15px;">
                                                      <button type="button" class="theme-btn" disabled style="opacity: 0.6; cursor: not-allowed;">Add To Cart</button>
                                              </div>
                                              @endif
