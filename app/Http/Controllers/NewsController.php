@@ -8,6 +8,7 @@ use App\Models\NewsCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
@@ -166,6 +167,7 @@ class NewsController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['message' => 'Invalid file. Only images up to 4MB are allowed.'], 422);
         } catch (\Throwable $e) {
+            Log::error('uploadEditorImage failed: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json(['message' => 'Image upload failed. Please try again.'], 500);
         }
     }
@@ -188,7 +190,7 @@ class NewsController extends Controller
     protected function uploadImage($file)
     {
         $name = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-        $path = Storage::disk('s3')->putFileAs('uploads/news', $file, $name, 'public');
+        $path = Storage::disk('s3')->putFileAs('uploads/news', $file, $name);
         return Storage::disk('s3')->url($path);
     }
 
