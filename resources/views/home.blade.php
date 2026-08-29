@@ -84,37 +84,54 @@
 </section>
 <section class="who_we_are section_with_bg ">
     <div class="wrapper">
-        <div class="row justify-content-center align-items-center">
-            <div class="col-md-6">
-                <div class="img-col position-relative text-center" data-aos="fade-right">
-                    <img src="{{url("public/images/logo/Logo2.webp")}}" alt="App Store" width="587" height="534">
+        <div class="row justify-content-center align-items-start">
+            <div class="col-12 mb-4">
+                <h2 class="h2 sub_heading primary_text" data-aos="fade-down">Highlights</h2>
+        
+                <div class="row g-3">
+                    @forelse($highlights as $h)
+                        <div class="col-md-3" data-aos="fade-up" style="margin-top: 20px;">
+                            <div class="card h-100">
+                                @if($h->featured_image)
+                                    <img src="{{ $h->featured_image }}" class="card-img-top" alt="{{ $h->title }}">
+                                @endif
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $h->title }}</h5>
+                                    <p class="card-text">{{ Str::limit(strip_tags($h->excerpt ?? $h->description), 120) }}</p>
+                                    <a href="{{ url('/news/'.$h->slug) }}" class="btn btn-sm btn-primary">Read</a>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">No highlights yet.</div>
+                    @endforelse
                 </div>
             </div>
-            <div class="col-md-6 mb-md-0 mb-4 mt-md-5 pt-4">
-                <div class="text-col w-100 text-md-left text-center ">
-                    <h6 class="h6 sub_heading primary_text  mb-lg-4 mb-3 " data-aos="fade-down">About Us</h6>
-                    <h2 class="h2 primary_text mb-lg-4 mb-3 pb-lg-3" data-aos="fade-down">Speech
-                        <span>Publications</span></h2>
-                    <div class="content  mb-lg-4 mb-3 pb-lg-3" data-aos="fade-down">
-                        <p>Speech Publications is a leading publishing institution dedicated to literary expression,
-                            intellectual discourse, and social awareness. This organization not only promotes
-                            contemporary literature and ideological discussions but also publishes high-quality books
-                            across a diverse range of subjects including education, research, sociology, lifestyle,
-                            psychology, history, and children's literature.</p>
-                        <p>We firmly believe that writing is not merely an embellishment of words, but a powerful medium
-                            to awaken and sensitize society. With this belief, we provide a platform for both emerging
-                            and established authors to not only share their creativity but also present ideas that can
-                            inspire and impact society in a meaningful way.
-                        </p>
-                        <p>The core objective of Speech Publications is to create a strong intellectual bridge between
-                            readers and writers, focusing on readability, authenticity, and quality. We believe that
-                            creative literature and thoughtful writing can lay the foundation for social change, and we
-                            are constantly working in this direction.
-                        </p>
-                        <p>Every book we publish is the beginning of a dialogue — a philosophy that connects the
-                            thoughts of the reader with the emotions of the writer.
-                        </p>
-                    </div> <a class="common_btn" href="{{url('/about')}}" data-aos="zoom-in" target="_self">About Us</a>
+
+            <div class="col-12 mt-5">
+                <h2 class="h2 sub_heading primary_text" data-aos="fade-down">Popular Books</h2>
+                <div class="row g-3">
+                    @forelse($popularBooks as $p)
+                        <div class="col-12 col-sm-6 col-md-3" data-aos="fade-up" style="margin-top: 20px;">
+                            <div class="card card-book h-100 text-center p-2">
+                                @if($p->image)
+                                    @php
+                                        $images = json_decode($p->image, true) ?? [];
+                                        if (!empty($images) && isset($images[0])) {
+                                            $imgUrl = Storage::disk('s3')->url('product/'.$images[0]);
+                                        } else {
+                                            $imgUrl = asset('images/no-image.png');
+                                        }
+                                    @endphp
+                                    <a href="{{ url('/book-details/'.$p->slug) }}"><img src="{{ $imgUrl }}" alt="{{ $p->name }}" class="img-fluid mb-2 book-thumb"></a>
+                                @endif
+                                <h6 class="mb-1"><a href="{{ url('/book-details/'.$p->slug) }}">{{ $p->name }}</a></h6>
+                                <div class="text-muted">₹{{ number_format($p->price,2) }}</div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">No popular books yet.</div>
+                    @endforelse
                 </div>
             </div>
         </div>
