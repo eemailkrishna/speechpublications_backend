@@ -148,7 +148,7 @@ class NewsAuthorController extends Controller
     protected function uploadImage($file)
     {
         $name = time() . '_' . Str::random(10) . '.' . $file->getClientOriginalExtension();
-        $path = Storage::disk('s3')->putFileAs('uploads/news/authors', $file, $name, 'public');
+        $path = Storage::disk('s3')->putFileAs('uploads/news/authors', $file, $name);
         return Storage::disk('s3')->url($path);
     }
 
