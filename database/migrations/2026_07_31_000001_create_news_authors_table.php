@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
+        if (! Schema::hasTable('news_authors')) {
         Schema::create('news_authors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('full_name');
@@ -26,6 +27,7 @@ return new class extends Migration {
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
+        }
     }
 
     public function down()
