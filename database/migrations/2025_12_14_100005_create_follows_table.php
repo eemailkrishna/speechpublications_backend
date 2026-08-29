@@ -8,6 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (! Schema::hasTable('follows')) {
         Schema::create('follows', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('follower_id');
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->index('follower_id');
             $table->index('following_id');
         });
+        }
     }
 
     public function down(): void
