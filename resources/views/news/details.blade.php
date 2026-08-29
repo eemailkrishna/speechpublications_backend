@@ -66,6 +66,21 @@
         float: right;
         margin-left: 1.5rem;
     }
+
+    /* Featured image sizing */
+    .featured-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 20px;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .featured-image {
+            height: 200px;
+        }
+    }
 </style>
 
 <!-- Breadcumb Section Start -->
@@ -106,8 +121,8 @@
             <div class="row g-5">
                 <div class="col-xl-9 col-lg-8">
                     <div class="blog-post-details1">
-                        <div class="single-blog-post">
-                            <img class="post-featured-thumb bg-cover" src="{{ $news->featured_image ? $news->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 400px; border-radius:20px">
+                            <div class="single-blog-post">
+                                <img class="post-featured-thumb bg-cover featured-image" src="{{ $news->featured_image ? $news->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="">
                             
                             <div class="post-content">
                                 <ul class="post-list d-flex align-items-center">
@@ -129,7 +144,7 @@
                                     </li>
                                 </ul>
                                 <h3 style="font-size: 30px; font-weight: 700;">{{ $news->title }}</h3>
-                                <div class="news-description2">
+                                <div class="news-description">
                                     {!! $news->description !!}
                                 </div>
                             </div>
