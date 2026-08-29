@@ -35,8 +35,7 @@ class FileUploadHelper
         $path = Storage::disk($disk)->putFileAs(
             $folder,
             $file,
-            $fileName,
-            'public'
+            $fileName
         );
 
         return [
