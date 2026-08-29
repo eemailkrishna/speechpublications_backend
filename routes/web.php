@@ -161,22 +161,6 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         'destroy' => 'admin-news-category.destroy',
     ]);
 
-    // Admin highlights management
-    Route::get('/admin/highlights', [App\Http\Controllers\Admin\HighlightController::class, 'index'])->name('admin.highlights.index');
-    Route::post('/admin/highlights', [App\Http\Controllers\Admin\HighlightController::class, 'store'])->name('admin.highlights.store');
-    Route::delete('/admin/highlights/{highlight}', [App\Http\Controllers\Admin\HighlightController::class, 'destroy'])->name('admin.highlights.destroy');
-
-    // Admin popular books management
-    Route::get('/admin/popular-books', [App\Http\Controllers\Admin\PopularBookController::class, 'index'])->name('admin.popular-books.index');
-    Route::post('/admin/popular-books', [App\Http\Controllers\Admin\PopularBookController::class, 'store'])->name('admin.popular-books.store');
-    Route::delete('/admin/popular-books/{popularBook}', [App\Http\Controllers\Admin\PopularBookController::class, 'destroy'])->name('admin.popular-books.destroy');
-
-    // Toggle popular flag for products (AJAX)
-    Route::post('/product/toggle-popular/{id}', [ProductController::class, 'togglePopular']);
-
-    // Toggle highlight flag for news (AJAX)
-    Route::post('/admin-news/toggle-highlight/{id}', [NewsController::class, 'toggleHighlight']);
-
     
 });
 

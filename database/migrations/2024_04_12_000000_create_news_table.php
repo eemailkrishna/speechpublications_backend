@@ -11,8 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (! Schema::hasTable('news')) {
-            Schema::create('news', function (Blueprint $table) {
+        Schema::create('news', function (Blueprint $table) {
             $table->id();
             $table->string('image', 255)->nullable();
             $table->string('title', 255);
@@ -20,8 +19,7 @@ return new class extends Migration
             $table->string('writer_name', 100);
             $table->timestamp('publish_date')->useCurrent();
             $table->timestamps();
-            });
-        }
+        });
     }
 
     /**

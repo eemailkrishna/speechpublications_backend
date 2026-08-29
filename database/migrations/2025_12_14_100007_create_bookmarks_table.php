@@ -8,8 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasTable('bookmarks')) {
-            Schema::create('bookmarks', function (Blueprint $table) {
+        Schema::create('bookmarks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('post_id');
@@ -20,8 +19,7 @@ return new class extends Migration
             $table->unique(['user_id', 'post_id']);
             $table->index('user_id');
             $table->index('post_id');
-            });
-        }
+        });
     }
 
     public function down(): void
