@@ -68,9 +68,11 @@
                                         <td class="text-secondary">{{ $item->publish_date ? $item->publish_date->format('d M Y') : '-' }}</td>
                                         <td><i data-lucide="eye" class="icon-sm me-1 text-secondary"></i>{{ $item->view_count }}</td>
                                         <td>
-                                            <div class="form-check form-switch d-inline-block">
-                                                <input class="form-check-input highlight-toggle" type="checkbox" id="highlight-{{ $item->id }}" data-id="{{ $item->id }}" {{ $item->is_highlight ? 'checked' : '' }}>
-                                            </div>
+                                            @if($item->featured)
+                                            <span class="badge bg-warning text-dark"><i data-lucide="star" class="icon-xs me-1"></i>Featured</span>
+                                            @else
+                                            <span class="badge bg-secondary-subtle text-secondary fw-normal">No</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <span class="badge {{ $item->status == 'published' ? 'bg-success' : 'bg-danger' }}">
@@ -111,42 +113,6 @@
             paging: false,
             info: false,
             dom: 'frtip',
-        });
-
-        $(document).on('change', '.highlight-toggle', function() {
-            var input = $(this);
-            var id = input.data('id');
-            var url = '{{ url('/admin-news/toggle-highlight') }}' + '/' + id;
-
-            $.ajax({
-                url: url,
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-                beforeSend: function() {
-                    input.prop('disabled', true);
-                },
-                success: function(resp) {
-                    if (!resp.success) {
-                        alert('Failed to update: ' + (resp.message || 'unknown'));
-                        input.prop('checked', !input.prop('checked'));
-                    }
-                },
-                error: function(xhr) {
-                    var msg = 'Failed to update';
-                    try {
-                        var body = JSON.parse(xhr.responseText || '{}');
-                        msg = body.message || msg;
-                    } catch (e) {}
-                    alert(msg + ' (status ' + xhr.status + ')');
-                    input.prop('checked', !input.prop('checked'));
-                },
-                complete: function() {
-                    input.prop('disabled', false);
-                }
-            });
         });
     });
 </script>

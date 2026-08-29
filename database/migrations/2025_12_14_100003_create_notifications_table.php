@@ -8,8 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasTable('notifications')) {
-            Schema::create('notifications', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('actor_id');
@@ -26,8 +25,7 @@ return new class extends Migration
             $table->index('user_id');
             $table->index('is_read');
             $table->index('created_at');
-            });
-        }
+        });
     }
 
     public function down(): void

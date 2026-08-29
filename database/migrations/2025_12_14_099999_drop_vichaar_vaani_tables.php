@@ -9,12 +9,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Destructive migration disabled to prevent accidental data loss.
-        // To enable removal, set an explicit env flag `ALLOW_DESTRUCTIVE_MIGRATIONS=true`.
-        if (env('ALLOW_DESTRUCTIVE_MIGRATIONS') !== 'true') {
-            return;
-        }
-
         // Drop tables in correct order due to foreign keys
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
         Schema::dropIfExists('bookmarks');

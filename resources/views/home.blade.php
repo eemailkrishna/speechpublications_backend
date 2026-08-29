@@ -21,43 +21,12 @@
         }
         .content.show { max-height: 2000px; }
         .content.show::after { display: none; }
-
-        /* Homepage responsive adjustments */
-        .wrapper { padding: 0 15px; }
-        .banner_slider .bg_img { width: 100%; height: auto; object-fit: cover; display:block; }
-        .vision_item figure img { width:232px; height:232px; object-fit:cover; }
-        .card-book img { width:100%; max-width:200px; height:auto; margin:0 auto; display:block; }
-        .book-thumb { width:200px; height:200px; object-fit:cover; display:block; margin:0 auto; }
-
-        @media (max-width: 992px) {
-            .vision_item figure img { width:160px; height:160px; }
-            .home-highlights-popular .col-md-4 { flex: 0 0 50%; max-width:50%; }
-            .home-highlights-popular .col-6.col-md-3 { flex: 0 0 33.3333%; max-width:33.3333%; }
-        }
-
-        @media (max-width: 768px) {
-            .vision_item figure img { width:120px; height:120px; }
-            .home-highlights-popular .col-md-4 { flex: 0 0 100%; max-width:100%; }
-            .home-highlights-popular .col-6.col-md-3 { flex: 0 0 50%; max-width:50%; }
-            .card-book { padding: 8px; }
-            .book-thumb { max-width:100%; width:100%; height:auto; }
-            .mt-10 { margin-top: 10px; }
-            .banner_slider .wrapped { padding: 12px 0; }
-            .description_box .content { max-height: 100px; }
-            .review_item .heading_box { gap:8px; }
-        }
-
-        @media (max-width: 480px) {
-            .vision_item figure img { width:80px; height:80px; }
-            .card-book img { max-width:150px; }
-            .description_box h4, .h2, .h1 { font-size: 1rem; }
-            .common_btn { padding: 8px 12px; font-size: 14px; }
-            .review_item .heading_box figure img { width:64px; height:64px; }
-            .intro_box h2 { font-size: 1.25rem; }
-        }
     </style>
 <section class="banner_slider" style="background:#003366">
-
+    <div class="slide_count">
+        <span class="current_slide"></span>
+        <span class="total_slide"></span>
+    </div>
     <div class="slider_box">
         <div class="slide banner_container position-relative">
             <ul class="elements" style="background:#003366">
@@ -113,7 +82,7 @@
         
     </div>
 </section>
-<section class="home-highlights-popular section_with_bg">
+<section class="who_we_are section_with_bg ">
     <div class="wrapper">
         <div class="row justify-content-center align-items-start">
             <div class="col-12 mb-4">
@@ -167,9 +136,7 @@
             </div>
         </div>
     </div>
-</section>
-
-<div class="vision_mission ">
+    <div class="vision_mission ">
         <div class="wrapper position-relative">
             <div class="row">
                 <div class="col-md-4 mb-md-0 mb-5">
@@ -180,7 +147,7 @@
                         <h4 class="h4 primary_text text-center">Our Mission</h4>
                         <p class="text-center">The mission of Speech Publications is to promote a culture of meaningful
                             dialogue between readers and writers by publishing high-quality content in literature,
-                            education, research, thought, and creative expressions such as poetry.  </p>
+                            education, research, thought, and creative expressions such as poetry.  </p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-md-0 mb-5">
@@ -191,7 +158,7 @@
                         <h4 class="h4 primary_text text-center">Our Vision</h4>
                         <p class="text-center">The vision of Speech Publications is to help build a society where
                             literature, thought, and creativity are encouraged, and where awareness, sensitivity, and
-                            positive transformation are made possible through the power of words. </p>
+                            positive transformation are made possible through the power of words. </p>
                     </div>
                 </div>
                 <div class="col-md-4 mb-md-0 mb-5">
@@ -207,6 +174,7 @@
             </div>
         </div>
     </div>
+</section>
 
 <section class="review_sec position-relative  section_with_bg ">
     <img class="bg_img" src="images/Testimonial-Background-Elements-1.png" alt="WePro-Solutions" width="1830"
@@ -283,5 +251,6 @@
     </div>
 </section>
 
- 
+
+
 @endsection
