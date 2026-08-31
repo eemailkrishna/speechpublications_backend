@@ -1,5 +1,14 @@
 @include('layouts.admin-header')
 
+<style>
+    .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
+    .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    input:checked + .toggle-slider { background-color: #7c6ff5; }
+    input:checked + .toggle-slider:before { transform: translateX(20px); }
+</style>
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -88,6 +97,10 @@
                                                         <th data-column-id="company" class="gridjs-th" style="width: 100px;">
                                                              <div class="gridjs-th-content">Status</div>
                                                         </th>
+
+                                                        <th data-column-id="popular" class="gridjs-th" style="width: 80px;">
+                                                             <div class="gridjs-th-content">Popular</div>
+                                                        </th>
                                                         
                                                         <th data-column-id="country" class="gridjs-th"style="width: 150px;">
                                                              <div class="gridjs-th-content">Action</div>
@@ -126,6 +139,16 @@
                                                             <span class="badge {{ $product->status == 'launched' ? 'bg-success' : 'bg-danger' }}">
                                                                 {{ ucfirst($product->status) }}
                                                             </span>
+                                                        </td>
+
+                                                        <td class="gridjs-td">
+                                                            <form action="{{ url('/product/' . $product->id . '/toggle-popular') }}" method="POST">
+                                                                @csrf
+                                                                <label class="toggle-switch" style="cursor:pointer;">
+                                                                    <input type="checkbox" {{ $product->is_popular ? 'checked' : '' }} onchange="this.form.submit()">
+                                                                    <span class="toggle-slider"></span>
+                                                                </label>
+                                                            </form>
                                                         </td>
 
                                                         <td class="gridjs-td">

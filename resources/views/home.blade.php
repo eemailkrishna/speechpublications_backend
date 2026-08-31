@@ -1,8 +1,21 @@
 @extends('layouts.app')
 @section('content')
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
  <style>
+        :root {
+            --sp-ink: #111;
+            --sp-card: #f8f2e4;
+            --sp-parchment: #eee3cd;
+            --sp-maroon: #7c2a2a;
+            --sp-maroon-dark: #5e1f1f;
+            --sp-line: #d9c9a8;
+            --sp-muted: #333;
+            --font-serif: 'Noto Serif Devanagari', serif;
+            --font-ui: 'Inter', sans-serif;
+        }
         .content { 
             max-height: 130px; 
             overflow: hidden; 
@@ -86,51 +99,59 @@
     <div class="wrapper">
         <div class="row justify-content-center align-items-start">
             <div class="col-12 mb-4">
-                <h2 class="h2 sub_heading primary_text" data-aos="fade-down">Highlights</h2>
+                <h2 class="h2 sub_heading primary_text" data-aos="fade-down" style="color: var(--sp-ink);">Highlights</h2>
         
-                <div class="row g-3">
+                <div class="row g-3" style="align-items: stretch;">
                     @forelse($highlights as $h)
                         <div class="col-md-3" data-aos="fade-up" style="margin-top: 20px;">
-                            <div class="card h-100">
-                                @if($h->featured_image)
-                                    <img src="{{ $h->featured_image }}" class="card-img-top" alt="{{ $h->title }}">
-                                @endif
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $h->title }}</h5>
-                                    <p class="card-text">{{ Str::limit(strip_tags($h->excerpt ?? $h->description), 120) }}</p>
-                                    <a href="{{ url('/news/'.$h->slug) }}" class="btn btn-sm btn-primary">Read</a>
+                            <a href="{{ url('/news/'.$h->slug) }}" style="text-decoration: none; color: inherit; display: block; height: 100%;">
+                                <div style="background: #fff; border: 1px solid var(--sp-line); border-radius: 10px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; height: 100%; display: flex; flex-direction: column;">
+                                    <div style="height: 180px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        @if($h->featured_image)
+                                            <img src="{{ $h->featured_image }}" alt="{{ $h->title }}" style="width: 100%; height: 100%;">
+                                        @else
+                                            <i class="fas fa-newspaper" style="font-size: 36px; color: var(--sp-muted); opacity: 0.3;"></i>
+                                        @endif
+                                    </div>
+                                    <div style="padding: 16px; flex: 1; display: flex; flex-direction: column;">
+                                        <h5 style="font-family: var(--font-serif); font-size: 16px; font-weight: 600; color: var(--sp-ink); margin-bottom: 8px; line-height: 1.3;">{{ $h->title }}</h5>
+                                        <p style="font-size: 13px; color: var(--sp-muted); line-height: 1.6; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">{{ Str::limit(strip_tags($h->excerpt ?? $h->description), 120) }}</p>
+                                        <span style="font-size: 13px; font-weight: 600; color: var(--sp-maroon); display: inline-flex; align-items: center; gap: 4px; margin-top: 8px;">Read <i class="fas fa-arrow-right" style="font-size: 11px;"></i></span>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     @empty
-                        <div class="col-12">No highlights yet.</div>
+                        <div class="col-12" style="text-align: center; padding: 40px; color: var(--sp-muted);">No highlights yet.</div>
                     @endforelse
                 </div>
             </div>
 
             <div class="col-12 mt-5">
-                <h2 class="h2 sub_heading primary_text" data-aos="fade-down">Popular Books</h2>
-                <div class="row g-3">
+                <h2 class="h2 sub_heading primary_text" data-aos="fade-down" style="color: var(--sp-ink);">Popular Books</h2>
+                <div class="row g-3" style="align-items: stretch;">
                     @forelse($popularBooks as $p)
-                        <div class="col-12 col-sm-6 col-md-3" data-aos="fade-up" style="margin-top: 20px;">
-                            <div class="card card-book h-100 text-center p-2">
-                                @if($p->image)
-                                    @php
-                                        $images = json_decode($p->image, true) ?? [];
-                                        if (!empty($images) && isset($images[0])) {
-                                            $imgUrl = Storage::disk('s3')->url('product/'.$images[0]);
-                                        } else {
-                                            $imgUrl = asset('images/no-image.png');
-                                        }
-                                    @endphp
-                                    <a href="{{ url('/book-details/'.$p->slug) }}"><img src="{{ $imgUrl }}" alt="{{ $p->name }}" class="img-fluid mb-2 book-thumb"></a>
-                                @endif
-                                <h6 class="mb-1"><a href="{{ url('/book-details/'.$p->slug) }}">{{ $p->name }}</a></h6>
-                                <div class="text-muted">₹{{ number_format($p->price,2) }}</div>
-                            </div>
+                        <div class="col-12 col-sm-6 col-md-3" data-aos="fade-up" style="margin-top: 20px; display: flex;">
+                            @php
+                                $images = json_decode($p->image, true) ?? [];
+                                $imgUrl = !empty($images) && isset($images[0])
+                                    ? Storage::disk('s3')->url('product/'.$images[0])
+                                    : asset('images/no-image.png');
+                            @endphp
+                            <a href="{{ url('/book-details/'.$p->slug) }}" style="text-decoration: none; color: inherit; display: block; height: 100%; width: 100%;">
+                                <div style="background: #fff; border: 1px solid var(--sp-line); border-radius: 10px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; height: 100%; display: flex; flex-direction: column;">
+                                    <div style="height: 250px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <img src="{{ $imgUrl }}" alt="{{ $p->name }}" style="width: 100%; height: 100%;">
+                                    </div>
+                                    <div style="padding: 14px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                                        <h6 style="font-family: var(--font-serif); font-size: 14px; font-weight: 600; color: #000000; margin-bottom: 6px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $p->name }}</h6>
+                                        <div style="font-size: 15px; font-weight: 700; color: var(--sp-maroon);">₹{{ number_format($p->price, 2) }}</div>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     @empty
-                        <div class="col-12">No popular books yet.</div>
+                        <div class="col-12" style="text-align: center; padding: 40px; color: var(--sp-muted);">No popular books yet.</div>
                     @endforelse
                 </div>
             </div>

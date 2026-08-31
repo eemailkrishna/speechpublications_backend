@@ -12,7 +12,7 @@
     }
     .product-title-css a { color: inherit !important; text-decoration: none !important; }
     @media (min-width: 991px) {
-        .product-title-css { min-height: 40px !important; }
+        .product-title-css { min-height: 33px !important; }
     }
  </style>
 
@@ -109,7 +109,7 @@
                      <div class="tab-content" id="pills-tabContent">
                          <div class="tab-pane fade show active" id="pills-arts" role="tabpanel"
                              aria-labelledby="pills-arts-tab" tabindex="0">
-                             <div class="row">
+                             <div class="row" style="align-items: stretch;">
 
                              @if($products->isEmpty())
                                  <div class="col-12 text-center" style="padding:60px 20px;">
@@ -125,9 +125,9 @@
                                          ? Storage::disk('s3')->url('product/'.$images[0])
                                          : asset('images/no-image.png');
                                  @endphp
-                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6 wow fadeInUp" data-wow-delay=".2s" style="margin-bottom: 20px; margin-top: 10px;">
-                                     <div class="shop-box-items">
-                                         <div class="book-thumb center" style="position:relative; height:auto;">
+                                 <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6 wow fadeInUp" data-wow-delay=".2s" style="margin-bottom: 20px; margin-top: 10px; display: flex;">
+                                      <div class="shop-box-items">
+                                          <div class="book-thumb center" style="position:relative;">
                                              <a href="{{ url('/book-details/'.$product->slug) }}">
                                                  <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
                                              </a>
@@ -152,11 +152,23 @@
                                              <h3 class="product-title-css">
                                                  <a href="{{url('/book-details/'.$product->slug)}}">{{ $product->name }}</a>
                                              </h3>
-                                             @if($product->author_name)
-                                             <p class="product-title-css" style="color:var(--sp-muted); font-size:12px; margin:0 0 6px;">
-                                                 {{ $product->author_name }}
-                                             </p>
-                                             @endif
+                                              @if($product->author_name)
+                                              <p class="product-title-css" style="color:var(--sp-muted); font-size:12px; margin:0 0 6px;">
+                                                  {{ $product->author_name }}
+                                              </p>
+                                              @endif
+                                              @if($product->rating)
+                                              <div style="margin-bottom: 6px; display: flex; align-items: center; gap: 4px;">
+                                                  @for($i = 1; $i <= 5; $i++)
+                                                      @if($i <= $product->rating)
+                                                          <i class="fa-solid fa-star" style="font-size: 12px; color: #c6862e;"></i>
+                                                      @else
+                                                          <i class="fa-regular fa-star" style="font-size: 12px; color: #c6862e;"></i>
+                                                      @endif
+                                                  @endfor
+                                                  <span style="font-size: 11px; color: var(--sp-muted); margin-left: 2px;">({{ $product->rating }})</span>
+                                              </div>
+                                              @endif
                                              <ul class="price-list1" @if($product->is_ebook != 1) style="margin-top: 6px;" @endif>
                                                  <li>₹{{ $product->price }}/-</li>
                                                  @if($product->is_ebook == 1)

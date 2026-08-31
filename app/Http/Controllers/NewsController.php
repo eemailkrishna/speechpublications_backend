@@ -152,6 +152,15 @@ class NewsController extends Controller
         return redirect()->route('admin-news.index')->with('success', 'News deleted successfully!');
     }
 
+    public function toggleFeatured($id)
+    {
+        $news = News::findOrFail($id);
+        $news->is_highlight = !$news->is_highlight;
+        $news->save();
+
+        return back()->with('success', 'Highlight status updated!');
+    }
+
     public function uploadEditorImage(Request $request)
     {
         try {
