@@ -44,6 +44,18 @@
         float: right;
         margin-left: 1.5rem;
     }
+
+
+    
+    @media (max-width: 768px) {
+        .news-img {
+            height: 200px!important;
+        }
+
+            .section-padding {
+        padding: 20px 0!important;
+    }
+    }
 </style>
 
 <!-- Breadcumb Section Start -->
@@ -83,7 +95,7 @@
                         <a href="{{ route('news.details', $featured->slug) }}" class="post-featured-thumb bg-cover d-block"
                             >
                         
-                        <img src="{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 400px; border-radius:20px">
+                        <img src="{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 400px; border-radius:20px" class="news-img">
                         </a>
                         <div class="post-content mt-4">
                             <ul class="post-list d-flex align-items-center">

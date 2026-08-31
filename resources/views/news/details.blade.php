@@ -78,7 +78,7 @@
 
     @media (max-width: 768px) {
         .featured-image {
-            height: 200px;
+            height:auto !important;
         }
 
         .theme-btn{
@@ -91,6 +91,10 @@
         .news-description{
             font-size: 14px!important;
         }
+
+        .news-details-area .post-featured-thumb {
+    min-height:0px!important;
+}
     }
 </style>
 
