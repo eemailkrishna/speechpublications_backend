@@ -3,7 +3,6 @@
         <div class="news-image">
             <a href="{{ route('news.details', $item->slug) }}">
                 <img src="{{ $item->featured_image ? $item->featured_image : asset('store/assets/img/news/post-1.jpg') }}" alt="{{ $item->title }}">
-                <img src="{{ $item->featured_image ? $item->featured_image : asset('store/assets/img/news/post-1.jpg') }}" alt="{{ $item->title }}">
             </a>
             <a href="{{ route('news.details', $item->slug) }}" class="post-box">
                 {{ $item->category->name ?? 'News' }}
