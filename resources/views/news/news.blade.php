@@ -80,6 +80,7 @@
                             <p style="font-size: 14px; line-height: 1.7; color: #5a4d3a; margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                                 {!! Str::limit(strip_tags($featured->description), 260) !!}
                             </p>
+                            
                              <a href="{{ route('news.details', $featured->slug) }}" class="theme-btn" style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;padding:12px!important">
                                     Read More <i class="fa-solid fa-arrow-right-long"></i>
                                 </a>
