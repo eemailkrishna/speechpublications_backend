@@ -3,7 +3,7 @@
     <div class="single-sidebar-widget">
         <div class="author-widget text-center">
             <div class="author-thumb mb-4">
-                <img style="width: 100%; height: auto;" src="{{ $news->author->profile_image ? $news->author->profile_image : asset('store/assets/img/team/details.png') }}" alt="{{ $news->author->full_name }}">
+                <img src="{{ $news->author->profile_image ? $news->author->profile_image : asset('store/assets/img/team/details.png') }}" alt="{{ $news->author->full_name }}">
             </div>
             <div class="wid-title">
                 <h3>{{ $news->author->full_name }}</h3>
@@ -41,7 +41,7 @@
             @forelse($trendingPosts as $post)
             <div class="recent-items">
                 <div class="recent-thumb">
-                    <img class="w-100" src="{{ $post->featured_image ? $post->featured_image : asset('store/assets/img/news/pp5.jpg') }}" alt="{{ $post->title }}">
+                    <img src="{{ $post->featured_image ? $post->featured_image : asset('store/assets/img/news/pp5.jpg') }}" alt="{{ $post->title }}">
                 </div>
                 <div class="recent-content">
                     <ul>
