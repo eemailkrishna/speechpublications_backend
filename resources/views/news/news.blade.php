@@ -77,7 +77,7 @@
         <div class="row g-4">
 
             @if(isset($featured) && $featured)
-            <div class="col-9">
+            <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
                 <div class="blog-post-details " >
                     <div class="single-blog-post">
                         <a href="{{ route('news.details', $featured->slug) }}" class="post-featured-thumb bg-cover d-block"
