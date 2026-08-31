@@ -18,28 +18,29 @@
     }
 
     @media (max-width: 767px) {
-        .product-title {
+        .shop-details-wrapper .shop-details-content .title-wrapper h2.product-title,
+        .shop-details-wrapper .shop-details-content .title-wrapper h2 {
             font-size: 22px !important;
         }
-        .shop-details-content .star span {
+        .shop-details-wrapper .shop-details-content .star span {
             font-size: 11px !important;
         }
-        .shop-details-content p {
+        .shop-details-wrapper .shop-details-content .star a {
             font-size: 13px !important;
         }
-        .shop-details-content .title-wrapper h5 {
+        .shop-details-wrapper .shop-details-content p {
+            font-size: 13px !important;
+        }
+        .shop-details-wrapper .shop-details-content .title-wrapper h5 {
             font-size: 17px !important;
         }
-        .price-list h3 {
+        .shop-details-wrapper .shop-details-content .price-list h3 {
             font-size: 26px !important;
         }
-        .single-tab .nav .nav-link h6 {
+        .shop-details-wrapper .single-tab .nav .nav-link h6 {
             font-size: 15px !important;
         }
-        .description-items p {
-            font-size: 13px !important;
-        }
-        .shop-details-content .star a {
+        .shop-details-wrapper .single-tab .description-items p {
             font-size: 13px !important;
         }
     }

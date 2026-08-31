@@ -80,6 +80,17 @@
         .featured-image {
             height: 200px;
         }
+
+        .theme-btn{
+            font-size: 11px!important;
+           
+        }
+        .news-title{
+            font-size: 20px!important;
+        }
+        .news-description{
+            font-size: 14px!important;
+        }
     }
 </style>
 
@@ -143,7 +154,7 @@
                                         {{ $news->publish_date ? $news->publish_date->format('d M, Y') : now()->format('d M, Y') }}
                                     </li>
                                 </ul>
-                                <h3 style="font-size: 30px; font-weight: 700;">{{ $news->title }}</h3>
+                                <h3 class="news-title" style="font-size: 30px; font-weight: 700;">{{ $news->title }}</h3>
                                 <div class="news-description">
                                     {!! $news->description !!}
                                 </div>
