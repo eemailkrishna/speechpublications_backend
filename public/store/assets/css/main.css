@@ -125,7 +125,7 @@ Version: 1.0.0
 @media (max-width: 575px) {
   .theme-btn {
     padding: 18px 30px;
-    font-size: 14px;
+    font-size: 11px!important;
   }
 }
 .theme-btn.bg-theme-2 {

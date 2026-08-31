@@ -3,25 +3,62 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <style>
+    .product-title-css {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @media (min-width: 768px) {
+        .product-title {
+            font-size: 31px !important;
+        }
+    }
+
     @media (max-width: 767px) {
         .product-title {
-            font-size: 26px;
+            font-size: 22px !important;
+        }
+        .shop-details-content .star span {
+            font-size: 11px !important;
+        }
+        .shop-details-content p {
+            font-size: 13px !important;
+        }
+        .shop-details-content .title-wrapper h5 {
+            font-size: 17px !important;
+        }
+        .price-list h3 {
+            font-size: 26px !important;
+        }
+        .single-tab .nav .nav-link h6 {
+            font-size: 15px !important;
+        }
+        .description-items p {
+            font-size: 13px !important;
+        }
+        .shop-details-content .star a {
+            font-size: 13px !important;
         }
     }
 
-     @media (min-width: 768px) {
-        .product-title {
-            font-size: 31px;
+    @media (max-width: 575px) {
+        .theme-btn {
+            padding: 18px 30px;
+            font-size: 11px !important;
+        }
+        .shop-details-wrapper .shop-details-content .cart-wrapper .quantity-basket .qty {
+            padding: 0px 30px !important;
         }
     }
 
-    .product-title-css {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
+    @media (max-width: 991px) {
+        .section-padding {
+            padding: 27px 0 !important;
         }
+    }
 </style>
     <!-- Breadcumb Section Start -->
     <div class="breadcrumb-wrapper bg-cover section-padding"
