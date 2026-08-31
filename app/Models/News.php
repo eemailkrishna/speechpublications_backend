@@ -20,6 +20,7 @@ class News extends Model
         'featured_image',
         'publish_date',
         'featured',
+        'is_highlight',
         'reading_time',
         'view_count',
         'status',
@@ -30,6 +31,7 @@ class News extends Model
     protected $casts = [
         'publish_date' => 'datetime',
         'featured' => 'boolean',
+        'is_highlight' => 'boolean',
     ];
 
     public function author()

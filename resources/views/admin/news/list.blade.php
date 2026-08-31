@@ -1,5 +1,14 @@
 @include('layouts.admin-header')
 
+<style>
+    .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
+    .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    input:checked + .toggle-slider { background-color: #7c6ff5; }
+    input:checked + .toggle-slider:before { transform: translateX(20px); }
+</style>
+
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css">
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -50,7 +59,7 @@
                                         <th class="gridjs-th"><div class="gridjs-th-content">Author</div></th>
                                         <th class="gridjs-th"><div class="gridjs-th-content">Publish Date</div></th>
                                         <th class="gridjs-th"><div class="gridjs-th-content">Views</div></th>
-                                        <th class="gridjs-th"><div class="gridjs-th-content">Featured</div></th>
+                                        <th class="gridjs-th"><div class="gridjs-th-content">Highlight</div></th>
                                         <th class="gridjs-th"><div class="gridjs-th-content">Status</div></th>
                                         <th class="gridjs-th"><div class="gridjs-th-content">Action</div></th>
                                     </tr>
@@ -68,11 +77,13 @@
                                         <td class="text-secondary">{{ $item->publish_date ? $item->publish_date->format('d M Y') : '-' }}</td>
                                         <td><i data-lucide="eye" class="icon-sm me-1 text-secondary"></i>{{ $item->view_count }}</td>
                                         <td>
-                                            @if($item->featured)
-                                            <span class="badge bg-warning text-dark"><i data-lucide="star" class="icon-xs me-1"></i>Featured</span>
-                                            @else
-                                            <span class="badge bg-secondary-subtle text-secondary fw-normal">No</span>
-                                            @endif
+                                            <form action="{{ route('admin-news.toggle-featured', $item->id) }}" method="POST">
+                                                @csrf
+                                                <label class="toggle-switch" style="cursor:pointer;">
+                                                    <input type="checkbox" {{ $item->is_highlight ? 'checked' : '' }} onchange="this.form.submit()">
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                            </form>
                                         </td>
                                         <td>
                                             <span class="badge {{ $item->status == 'published' ? 'bg-success' : 'bg-danger' }}">

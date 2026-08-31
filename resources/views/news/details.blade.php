@@ -70,8 +70,7 @@
     /* Featured image sizing */
     .featured-image {
         width: 100%;
-        height: 300px;
-        object-fit: cover;
+        height: 450px;
         border-radius: 10px;
         display: block;
     }
@@ -151,6 +150,10 @@
                                     </li>
                                 </ul>
                                 <h3 class="news-title" style="font-size: 26px; font-weight: 700; color: var(--sp-ink); font-family: var(--font-serif);">{{ $news->title }}</h3>
+                                <p style="font-size: 15px; line-height: 1.8; color: var(--sp-muted); margin-bottom: 16px;">
+                                    {{ Str::limit(strip_tags($news->excerpt ?? $news->description), 300) }}
+                                </p>
+                               
                                 <div class="news-description">
                                     {!! $news->description !!}
                                 </div>

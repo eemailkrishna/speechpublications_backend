@@ -57,7 +57,7 @@
                 <div class="blog-post-details">
                     <div class="single-blog-post">
                         <a href="{{ route('news.details', $featured->slug) }}" class="post-featured-thumb bg-cover d-block">
-                            <img src="{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 380px; object-fit: cover; border-radius: 10px 10px 0 0;" class="news-img">
+                            <img src="{{ $featured->featured_image ? $featured->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="" style="width: 100%; height: 450px; border-radius: 10px 10px 0 0;" class="news-img">
                         </a>
                         <div class="post-content" style="padding: 20px;">
                             <ul class="post-list d-flex align-items-center" style="gap: 16px; flex-wrap: wrap; margin-bottom: 12px;">
@@ -75,14 +75,14 @@
                                 </li>
                             </ul>
                             <h3 style="font-size: 22px; font-weight: 600; line-height: 1.35; margin-bottom: 10px;">
-                                <a href="{{ route('news.details', $featured->slug) }}" style="color: var(--sp-ink);">{{ $featured->title }}</a>
+                                <a href="{{ route('news.details', $featured->slug) }}" style="color: #1a1008;">{{ $featured->title }}</a>
                             </h3>
-                            <p style="font-size: 14px; line-height: 1.7; color: var(--sp-muted); margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            <p style="font-size: 14px; line-height: 1.7; color: #5a4d3a; margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                                 {!! Str::limit(strip_tags($featured->description), 260) !!}
                             </p>
-                            <a href="{{ route('news.details', $featured->slug) }}" class="theme-btn-2" style="color: var(--sp-maroon); font-weight: 700; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;">
-                                Read More <i class="fa-regular fa-arrow-right-long"></i>
-                            </a>
+                             <a href="{{ route('news.details', $featured->slug) }}" class="theme-btn" style="display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px;padding:12px!important">
+                                    Read More <i class="fa-solid fa-arrow-right-long"></i>
+                                </a>
                         </div>
                     </div>
                 </div>

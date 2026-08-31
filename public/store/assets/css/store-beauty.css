@@ -12,11 +12,11 @@
   --theme2: #c6862e !important;
   --header: #241811 !important;
   --text: #7a6c56 !important;
-  --bg: #eee3cd !important;
-  --white: #f8f2e4 !important;
+  --bg: #ffffff !important;
+  --white: #ffffff !important;
   --sp-ink: #241811;
-  --sp-parchment: #eee3cd;
-  --sp-card: #f8f2e4;
+  --sp-parchment: #ffffff;
+  --sp-card: #ffffff;
   --sp-maroon: #7c2a2a;
   --sp-maroon-dark: #5e1f1f;
   --sp-marigold: #c6862e;
@@ -28,7 +28,7 @@
 }
 
 body {
-  background: var(--sp-parchment) !important;
+  background: #fff !important;
   font-family: var(--font-ui) !important;
 }
 
@@ -139,6 +139,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden;
+  height: 100% !important;
 }
 
 .shop-box-items:hover {
@@ -149,7 +150,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Cover image */
 .shop-box-items .book-thumb {
   padding: 0 !important;
-  background: #e8dcc8 !important;
+  background: #fff !important;
   border-radius: 0 !important;
   position: relative;
   overflow: hidden;
@@ -159,7 +160,6 @@ h1, h2, h3, h4, h5, h6 {
 .shop-box-items .book-thumb img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important;
   filter: none !important;
   transition: transform .3s ease !important;
 }

@@ -11,10 +11,10 @@
   --theme: #7c2a2a !important;
   --theme2: #c6862e !important;
   --header: #241811 !important;
-  --text: #7a6c56 !important;
+  --text: #111 !important;
   --bg: #eee3cd !important;
   --white: #f8f2e4 !important;
-  --sp-ink: #241811;
+  --sp-ink: #111;
   --sp-parchment: #eee3cd;
   --sp-card: #f8f2e4;
   --sp-maroon: #7c2a2a;
@@ -22,7 +22,7 @@
   --sp-marigold: #c6862e;
   --sp-forest: #33503d;
   --sp-line: #d9c9a8;
-  --sp-muted: #7a6c56;
+  --sp-muted: #333;
   --font-serif: 'Noto Serif Devanagari', serif;
   --font-ui: 'Inter', sans-serif;
 }
@@ -187,6 +187,9 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden !important;
   background: var(--sp-card) !important;
   transition: transform .2s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
 }
 
 .news-card-items:hover {
@@ -244,6 +247,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .news-card-items .news-content {
   padding: 14px !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .news-card-items .news-content ul {
@@ -930,3 +936,41 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hide cursor follower */
 .cursor-follower { display: none !important; }
+
+/* Force all text black on news pages */
+.news-section,
+.news-section *,
+.news-details-section,
+.news-details-section *,
+.news-section a,
+.news-section p,
+.news-section h1,
+.news-section h2,
+.news-section h3,
+.news-section h4,
+.news-section h5,
+.news-section h6,
+.news-section span,
+.news-section li,
+.news-section li a {
+  color: #000000 !important;
+}
+
+/* Read More button - keep white text and icon */
+.news-section .theme-btn,
+.news-section a.theme-btn,
+.news-card-items .news-content .theme-btn {
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  padding: 12px !important;
+  background: var(--sp-maroon) !important;
+  border: none !important;
+  border-radius: 100px !important;
+}
+
+.news-section .theme-btn *,
+.news-card-items .news-content .theme-btn * {
+  color: #ffffff !important;
+}
