@@ -49,7 +49,7 @@
     }
     .news-description figure.image figcaption {
         font-size: 14px;
-        color: #6b7280;
+        color: var(--sp-muted);
         margin-top: 8px;
         caption-side: bottom;
     }
@@ -70,46 +70,37 @@
     /* Featured image sizing */
     .featured-image {
         width: 100%;
-        height: 300px;
-        object-fit: cover;
-        border-radius: 20px;
+        height: 450px;
+        border-radius: 10px;
         display: block;
     }
 
     @media (max-width: 768px) {
         .featured-image {
-            height:auto !important;
+            height: auto !important;
         }
-
-        .theme-btn{
-            font-size: 11px!important;
-           
+        .news-title {
+            font-size: 20px !important;
         }
-        .news-title{
-            font-size: 20px!important;
+        .news-description {
+            font-size: 14px !important;
         }
-        .news-description{
-            font-size: 14px!important;
-        }
-
         .news-details-area .post-featured-thumb {
-    min-height:0px!important;
-}
+            min-height: 0px !important;
+        }
     }
 </style>
 
 <!-- Breadcumb Section Start -->
-<div class="breadcrumb-wrapper bg-cover section-padding"
-    style="background: #0b4cff14;">
+<div class="breadcrumb-wrapper bg-cover section-paddingn"
+    style="background: var(--sp-card);">
     <div class="container">
         <div class="page-heading">
             <h1>News Details</h1>
             <div class="page-header">
                 <ul class="breadcrumb-items wow fadeInUp" data-wow-delay=".3s">
                     <li>
-                        <a href="{{url('/')}}">
-                            Home
-                        </a>
+                        <a href="{{url('/')}}">Home</a>
                     </li>
                     <li>
                         <i class="fa-solid fa-chevron-right"></i>
@@ -140,31 +131,35 @@
                                 <img class="post-featured-thumb bg-cover featured-image" src="{{ $news->featured_image ? $news->featured_image : asset('store/assets/img/news/post-4.jpg') }}" alt="">
                             
                             <div class="post-content">
-                                <ul class="post-list d-flex align-items-center">
-                                    <li>
-                                        <i class="fa-light fa-user"></i>
+                                <ul class="post-list d-flex align-items-center" style="gap: 18px; flex-wrap: wrap; margin-bottom: 16px;">
+                                    <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-light fa-user" style="color: var(--sp-maroon);"></i>
                                         By {{ $news->author->full_name ?? 'Admin' }}
                                     </li>
-                                    <li>
-                                        <i class="fa-sharp fa-regular fa-comments"></i>
+                                    <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-sharp fa-regular fa-comments" style="color: var(--sp-maroon);"></i>
                                         {{ $news->approved_comments_count ?? $comments->total() }} Comments
                                     </li>
-                                    <li>
-                                        <i class="fa-light fa-tag"></i>
+                                    <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-light fa-tag" style="color: var(--sp-maroon);"></i>
                                         {{ $news->category->name ?? 'News' }}
                                     </li>
-                                    <li>
-                                        <i class="fa-light fa-calendar-days"></i>
+                                    <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-light fa-calendar-days" style="color: var(--sp-maroon);"></i>
                                         {{ $news->publish_date ? $news->publish_date->format('d M, Y') : now()->format('d M, Y') }}
                                     </li>
                                 </ul>
-                                <h3 class="news-title" style="font-size: 30px; font-weight: 700;">{{ $news->title }}</h3>
+                                <h3 class="news-title" style="font-size: 26px; font-weight: 700; color: var(--sp-ink); font-family: var(--font-serif);">{{ $news->title }}</h3>
+                                <p style="font-size: 15px; line-height: 1.8; color: var(--sp-muted); margin-bottom: 16px;">
+                                    {{ Str::limit(strip_tags($news->excerpt ?? $news->description), 300) }}
+                                </p>
+                               
                                 <div class="news-description">
                                     {!! $news->description !!}
                                 </div>
                             </div>
                         </div>
-                        <div class="row tag-share-wrap mt-4 mb-5">
+                        <div class="row tag-share-wrap">
                             <div class="col-lg-8 col-12">
                                 <div class="tagcloud">
                                     <span class="me-3">Tags:</span>
@@ -187,7 +182,7 @@
                         </div>
 
                         @if($news->author)
-                        <div class="row tag-share-wrap mt-4 mb-5">
+                        <div class="row tag-share-wrap mt-3 mb-5">
                             <div class="col-12">
                                 <a href="{{ route('news.author', $news->author->slug) }}" class="theme-btn style-2">View All Articles By {{ $news->author->full_name }} <i class="fa-solid fa-arrow-right-long"></i></a>
                             </div>
@@ -196,7 +191,7 @@
 
                         <div class="comments-area">
                             <div class="comments-heading">
-                                <h3>{{ $comments->total() }} Comments</h3>
+                                <h3 style="font-family: var(--font-serif); color: var(--sp-ink);">{{ $comments->total() }} Comments</h3>
                             </div>
                             @forelse($comments as $comment)
                             <div class="blog-single-comment d-flex gap-4 pt-4 pb-5">
@@ -224,10 +219,10 @@
                         <div class="comment-form-wrap pt-5">
                             <h3>Leave a comment</h3>
                             @if(session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
+                            <div class="alert alert-success" style="border-radius: 8px; font-size: 14px;">{{ session('success') }}</div>
                             @endif
                             @if($errors->any())
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger" style="border-radius: 8px; font-size: 14px;">
                                 <ul class="mb-0">
                                     @foreach($errors->all() as $error)
                                     <li>{{ $error }}</li>
@@ -254,12 +249,12 @@
                                     <div class="col-lg-12">
                                         <div class="form-clt">
                                             <span>Message*</span>
-                                            <textarea name="comment" id="message" placeholder="Write Message" required>{{ old('comment') }}</textarea>
+                                            <textarea name="comment" id="message" placeholder="Write your comment..." required>{{ old('comment') }}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <button type="submit" class="theme-btn style-2">
-                                            post comment<i class="fa-solid fa-arrow-right-long"></i>
+                                        <button type="submit" class="theme-btn">
+                                            Post Comment <i class="fa-solid fa-arrow-right-long"></i>
                                         </button>
                                     </div>
                                 </div>

@@ -123,6 +123,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/product-edit/{id}', [ProductController::class, 'edit']);
     Route::get('/product-delete/{id}', [ProductController::class, 'delete']);
     Route::post('products/{id}', [ProductController::class, 'update'])->name('products.update');
+    Route::post('product/{id}/toggle-popular', [ProductController::class, 'togglePopular'])->name('product.toggle-popular');
 
     // News Management Routes
     Route::post('/admin-news/upload-image', [NewsController::class, 'uploadEditorImage'])
@@ -138,6 +139,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
         'update' => 'admin-news.update',
         'destroy' => 'admin-news.destroy',
     ]);
+
+    Route::post('admin-news/{id}/toggle-featured', [NewsController::class, 'toggleFeatured'])->name('admin-news.toggle-featured');
 
     Route::resource('admin-news-author', NewsAuthorController::class, [
         'parameters' => ['admin-news-author' => 'author']

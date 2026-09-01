@@ -230,6 +230,13 @@ class ProductController extends Controller
         }
     }
 
+    public function togglePopular($id){
+        $product = Product::findOrFail($id);
+        $product->is_popular = !$product->is_popular;
+        $product->save();
+        return back()->with('success', 'Product popular status updated');
+    }
+
     public function OrderHistory(Request $request){
         $userId = null;
         if(Auth::user()->hasRole('admin')){

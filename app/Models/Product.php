@@ -24,7 +24,7 @@ class Product extends Model
         'inside_the_box',
         'category_id',
         'status',
-        
+        'is_popular',
     ];
 
     public function order()

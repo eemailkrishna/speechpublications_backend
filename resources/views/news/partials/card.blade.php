@@ -1,8 +1,7 @@
-<div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".2s">
-    <div class="news-card-items style-2 mt-0">
+<div class="col-xl-4 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay=".2s" style="margin-bottom: 20px; display: flex;">
+    <div class="news-card-items style-2 mt-0" style="width: 100%;">
         <div class="news-image">
             <a href="{{ route('news.details', $item->slug) }}">
-                <img src="{{ $item->featured_image ? $item->featured_image : asset('store/assets/img/news/post-1.jpg') }}" alt="{{ $item->title }}">
                 <img src="{{ $item->featured_image ? $item->featured_image : asset('store/assets/img/news/post-1.jpg') }}" alt="{{ $item->title }}">
             </a>
             <a href="{{ route('news.details', $item->slug) }}" class="post-box">
@@ -28,8 +27,9 @@
                 {{ Illuminate\Support\Str::limit(strip_tags($item->excerpt ?? $item->description), 120) }}
             </p>
             @endif
-            <a href="{{ route('news.details', $item->slug) }}" class="theme-btn-2">Read More <i
-                    class="fa-regular fa-arrow-right-long"></i></a>
+            <div style="margin-top: auto;">
+                <a href="{{ route('news.details', $item->slug) }}" class="theme-btn" style="display: inline-flex; align-items: center; gap: 6px;">Read More <i class="fa-solid fa-arrow-right-long"></i></a>
+            </div>
         </div>
     </div>
 </div>
