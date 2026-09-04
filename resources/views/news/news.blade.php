@@ -5,8 +5,8 @@
 <!-- JSON-LD ItemList for News -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
+  "@@context": "https://schema.org",
+  "@@type": "ItemList",
   "name": "Speech Publications News",
   "url": "{{ url('/news') }}",
   "numberOfItems": {{ is_object($news) ? $news->count() : 0 }},
@@ -14,16 +14,16 @@
     @if(is_object($news))
     @foreach($news->take(9) as $index => $item)
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": {{ $index + 1 }},
       "item": {
-        "@type": "NewsArticle",
+        "@@type": "NewsArticle",
         "headline": "{{ addslashes($item->title) }}",
         "url": "{{ url('/news/'.$item->slug) }}",
         "image": "{{ $item->featured_image ?? asset('images/logo.png') }}",
         "datePublished": "{{ $item->publish_date ? $item->publish_date->toIso8601String() : now()->toIso8601String() }}",
         "author": {
-          "@type": "Person",
+          "@@type": "Person",
           "name": "{{ addslashes($item->author->full_name ?? 'Admin') }}"
         }
       }
@@ -37,17 +37,17 @@
 <!-- JSON-LD BreadcrumbList -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
   "itemListElement": [
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 1,
       "name": "Home",
       "item": "{{ url('/') }}"
     },
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 2,
       "name": "News",
       "item": "{{ url('/news') }}"

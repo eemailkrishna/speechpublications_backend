@@ -6,37 +6,37 @@
 <!-- JSON-LD Product Structured Data -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "Product",
+  "@@context": "https://schema.org",
+  "@@type": "Product",
   "name": "{{ addslashes($product->name) }}",
   "description": "{{ addslashes(Str::limit(strip_tags($product->description ?? $product->heading ?? ''), 300)) }}",
   "image": "{{ $imageUrl }}",
   "url": "{{ url()->current() }}",
   "brand": {
-    "@type": "Brand",
+    "@@type": "Brand",
     "name": "Speech Publications"
   },
   "author": {
-    "@type": "Person",
+    "@@type": "Person",
     "name": "{{ addslashes($product->author_name ?? 'Speech Publications') }}"
   },
   "publisher": {
-    "@type": "Organization",
+    "@@type": "Organization",
     "name": "Speech Publications",
     "logo": {
-      "@type": "ImageObject",
+      "@@type": "ImageObject",
       "url": "{{ asset('images/logo.png') }}"
     }
   },
   "offers": {
-    "@type": "Offer",
+    "@@type": "Offer",
     "price": "{{ $product->price }}",
     "priceCurrency": "INR",
     "availability": "{{ $product->status == 'launched' ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder' }}",
     "url": "{{ url()->current() }}"
   },
   "aggregateRating": {
-    "@type": "AggregateRating",
+    "@@type": "AggregateRating",
     "ratingValue": "{{ $product->rating ?? 5 }}",
     "bestRating": "5",
     "worstRating": "1"
@@ -47,23 +47,23 @@
 <!-- JSON-LD BreadcrumbList -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
   "itemListElement": [
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 1,
       "name": "Home",
       "item": "{{ url('/') }}"
     },
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 2,
       "name": "Shop",
       "item": "{{ url('/store') }}"
     },
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 3,
       "name": "{{ addslashes(Str::limit($product->name, 50)) }}",
       "item": "{{ url()->current() }}"

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
+@verbatim
 <!-- JSON-LD Organization Structured Data -->
 <script type="application/ld+json">
 {
@@ -8,7 +9,6 @@
   "@type": "Organization",
   "name": "Speech Publications",
   "url": "https://speechpublications.com",
-  "logo": "{{ asset('images/logo.png') }}",
   "description": "Speech Publications offers a wide range of books, news articles, and publications. Explore our collection today.",
   "sameAs": [],
   "contactPoint": {
@@ -36,6 +36,7 @@
   }
 }
 </script>
+@endverbatim
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">

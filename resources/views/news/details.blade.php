@@ -5,8 +5,8 @@
 <!-- JSON-LD Article Structured Data -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "NewsArticle",
+  "@@context": "https://schema.org",
+  "@@type": "NewsArticle",
   "headline": "{{ addslashes($news->title) }}",
   "description": "{{ addslashes(Str::limit(strip_tags($news->excerpt ?? $news->description), 300)) }}",
   "image": "{{ $news->featured_image ?? asset('images/logo.png') }}",
@@ -14,20 +14,20 @@
   "datePublished": "{{ $news->publish_date ? $news->publish_date->toIso8601String() : now()->toIso8601String() }}",
   "dateModified": "{{ $news->updated_at ? $news->updated_at->toIso8601String() : now()->toIso8601String() }}",
   "author": {
-    "@type": "Person",
+    "@@type": "Person",
     "name": "{{ addslashes($news->author->full_name ?? 'Admin') }}"
   },
   "publisher": {
-    "@type": "Organization",
+    "@@type": "Organization",
     "name": "Speech Publications",
     "logo": {
-      "@type": "ImageObject",
+      "@@type": "ImageObject",
       "url": "{{ asset('images/logo.png') }}"
     }
   },
   "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ url()->current() }}"
+    "@@type": "WebPage",
+    "@@id": "{{ url()->current() }}"
   },
   "articleSection": "{{ addslashes($news->category->name ?? 'News') }}"
 }
@@ -36,23 +36,23 @@
 <!-- JSON-LD BreadcrumbList -->
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
+  "@@context": "https://schema.org",
+  "@@type": "BreadcrumbList",
   "itemListElement": [
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 1,
       "name": "Home",
       "item": "{{ url('/') }}"
     },
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 2,
       "name": "News",
       "item": "{{ url('/news') }}"
     },
     {
-      "@type": "ListItem",
+      "@@type": "ListItem",
       "position": 3,
       "name": "{{ addslashes(Str::limit($news->title, 50)) }}",
       "item": "{{ url()->current() }}"

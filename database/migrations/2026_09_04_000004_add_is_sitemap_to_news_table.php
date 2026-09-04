@@ -9,14 +9,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('news', function (Blueprint $table) {
-            $table->boolean('is_sitemap')->default(true)->after('is_highlight');
+            if (!Schema::hasColumn('news', 'is_sitemap')) {
+                $table->boolean('is_sitemap')->default(true)->after('is_highlight');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('news', function (Blueprint $table) {
-            $table->dropColumn('is_sitemap');
+            if (Schema::hasColumn('news', 'is_sitemap')) {
+                $table->dropColumn('is_sitemap');
+            }
         });
     }
 };
