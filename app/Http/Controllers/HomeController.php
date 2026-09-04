@@ -35,7 +35,11 @@ class HomeController extends Controller
             ->take(12)
             ->get();
 
-        return view('home', compact('testimonials', 'highlights', 'popularBooks'));
+        $metaTitle = 'Speech Publications - Books, News & More';
+        $metaDescription = 'Speech Publications offers a wide range of books, news articles, and publications. Explore our collection today.';
+        $metaImage = asset('images/logo.png');
+
+        return view('home', compact('testimonials', 'highlights', 'popularBooks', 'metaTitle', 'metaDescription', 'metaImage'));
     }
 
     public function news(Request $request){
@@ -76,6 +80,10 @@ class HomeController extends Controller
         $recentPosts = News::published()->orderBy('publish_date', 'desc')->take(4)->get();
         $trendingPosts = News::published()->orderBy('view_count', 'desc')->orderBy('publish_date', 'desc')->take(4)->get();
 
+        $metaTitle = 'News - Speech Publications';
+        $metaDescription = 'Stay updated with the latest news and articles from Speech Publications.';
+        $metaImage = asset('images/logo.png');
+
         // Return JSON for AJAX requests
         if ($request->ajax()) {
             $html = '';
@@ -88,7 +96,7 @@ class HomeController extends Controller
             ]);
         }
 
-        $data = compact('featured', 'news', 'categories', 'recentPosts', 'trendingPosts', 'categoryId', 'search', 'total');
+        $data = compact('featured', 'news', 'categories', 'recentPosts', 'trendingPosts', 'categoryId', 'search', 'total', 'metaTitle', 'metaDescription', 'metaImage');
         return view('news.news', $data);
     }
  

@@ -207,6 +207,20 @@
                                             <input type="text" class="form-control" id="meta_description" name="meta_description" value="{{ old('meta_description', $news->meta_description) }}">
                                         </div>
                                     </div>
+
+                                    <div class="col-xl-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Include in Sitemap</label>
+                                            <div class="toggle-label">
+                                                <label class="toggle-switch">
+                                                    <input type="checkbox" id="is_sitemap" name="is_sitemap" value="1" {{ old('is_sitemap', $news->is_sitemap ?? 1) ? 'checked' : '' }}>
+                                                    <span class="toggle-slider"></span>
+                                                </label>
+                                                <span id="sitemap-status">{{ old('is_sitemap', $news->is_sitemap ?? 1) ? 'Yes' : 'No' }}</span>
+                                            </div>
+                                            <small class="text-muted">If enabled, this news URL will appear in sitemap.xml</small>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row">
@@ -357,6 +371,14 @@
     featuredToggle.addEventListener('change', function() {
         featuredStatus.textContent = this.checked ? 'Yes' : 'No';
     });
+
+    const sitemapToggle = document.getElementById('is_sitemap');
+    const sitemapStatus = document.getElementById('sitemap-status');
+    if (sitemapToggle) {
+        sitemapToggle.addEventListener('change', function() {
+            sitemapStatus.textContent = this.checked ? 'Yes' : 'No';
+        });
+    }
 
     function previewImage(event) {
         const file = event.target.files[0];

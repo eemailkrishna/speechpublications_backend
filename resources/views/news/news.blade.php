@@ -2,6 +2,60 @@
 
 <link rel="stylesheet" href="{{ url('public/store/assets/css/frontend-beauty.css') }}">
 
+<!-- JSON-LD ItemList for News -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Speech Publications News",
+  "url": "{{ url('/news') }}",
+  "numberOfItems": {{ is_object($news) ? $news->count() : 0 }},
+  "itemListElement": [
+    @if(is_object($news))
+    @foreach($news->take(9) as $index => $item)
+    {
+      "@type": "ListItem",
+      "position": {{ $index + 1 }},
+      "item": {
+        "@type": "NewsArticle",
+        "headline": "{{ addslashes($item->title) }}",
+        "url": "{{ url('/news/'.$item->slug) }}",
+        "image": "{{ $item->featured_image ?? asset('images/logo.png') }}",
+        "datePublished": "{{ $item->publish_date ? $item->publish_date->toIso8601String() : now()->toIso8601String() }}",
+        "author": {
+          "@type": "Person",
+          "name": "{{ addslashes($item->author->full_name ?? 'Admin') }}"
+        }
+      }
+    }{{ $loop->last ? '' : ',' }}
+    @endforeach
+    @endif
+  ]
+}
+</script>
+
+<!-- JSON-LD BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ url('/') }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "News",
+      "item": "{{ url('/news') }}"
+    }
+  ]
+}
+</script>
+
 <style>
     .news-details-area .post-content img {
         max-width: 100%;

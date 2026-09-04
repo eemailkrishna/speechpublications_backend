@@ -28,13 +28,20 @@ class NewsFrontController extends Controller
         $trendingPosts = $this->trendingPosts();
         $comments = $news->approvedComments()->orderBy('created_at', 'desc')->paginate(10);
 
+        $metaTitle = $news->title . ' - Speech Publications';
+        $metaDescription = \Illuminate\Support\Str::limit(strip_tags($news->excerpt ?? $news->description), 160);
+        $metaImage = $news->featured_image ?? asset('images/logo.png');
+
         return view('news.details', compact(
             'news',
             'related',
             'categories',
             'recentPosts',
             'trendingPosts',
-            'comments'
+            'comments',
+            'metaTitle',
+            'metaDescription',
+            'metaImage'
         ));
     }
 
@@ -52,12 +59,19 @@ class NewsFrontController extends Controller
         $recentPosts = $this->recentPosts();
         $trendingPosts = $this->trendingPosts();
 
+        $metaTitle = ($author->full_name ?? 'Author') . ' - Speech Publications';
+        $metaDescription = 'Articles by ' . ($author->full_name ?? 'Author') . ' on Speech Publications.';
+        $metaImage = $author->image ?? asset('images/logo.png');
+
         return view('news.author', compact(
             'author',
             'articles',
             'categories',
             'recentPosts',
-            'trendingPosts'
+            'trendingPosts',
+            'metaTitle',
+            'metaDescription',
+            'metaImage'
         ));
     }
 
@@ -79,6 +93,10 @@ class NewsFrontController extends Controller
         $recentPosts = $this->recentPosts();
         $trendingPosts = $this->trendingPosts();
 
+        $metaTitle = ($category->name ?? 'Category') . ' - Speech Publications';
+        $metaDescription = 'Browse articles in ' . ($category->name ?? 'Category') . ' on Speech Publications.';
+        $metaImage = asset('images/logo.png');
+
         return view('news.news', compact(
             'news',
             'categories',
@@ -87,7 +105,10 @@ class NewsFrontController extends Controller
             'category',
             'categoryId',
             'search',
-            'total'
+            'total',
+            'metaTitle',
+            'metaDescription',
+            'metaImage'
         ));
     }
 

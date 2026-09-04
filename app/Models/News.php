@@ -26,12 +26,14 @@ class News extends Model
         'status',
         'meta_title',
         'meta_description',
+        'is_sitemap',
     ];
 
     protected $casts = [
         'publish_date' => 'datetime',
         'featured' => 'boolean',
         'is_highlight' => 'boolean',
+        'is_sitemap' => 'boolean',
     ];
 
     public function author()

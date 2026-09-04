@@ -25,6 +25,7 @@ class Product extends Model
         'category_id',
         'status',
         'is_popular',
+        'is_sitemap',
     ];
 
     public function order()

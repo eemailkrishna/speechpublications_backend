@@ -8,10 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\Testimonial;
 use App\Models\ProductCategory;
 use App\Models\Cart;
 
+use App\Models\ProductComment;
 use App\Models\Product;
 use Mail;
 use validated;
@@ -44,7 +47,11 @@ class StoreController extends Controller
         // Order by latest and paginate (20 per page)
         $products = $query->orderBy('id', 'desc')->paginate(20);
         
-        return view('store.shop', compact('categories', 'products'));
+        $metaTitle = 'Store - Speech Publications';
+        $metaDescription = 'Browse our collection of books at Speech Publications. Find the best titles across various genres.';
+        $metaImage = asset('images/logo.png');
+        
+        return view('store.shop', compact('categories', 'products', 'metaTitle', 'metaDescription', 'metaImage'));
     }
     public function book_details(Request $request){
     
@@ -65,8 +72,16 @@ class StoreController extends Controller
             $cartItems = $this->getSessionCartItems();
         }
         // return $cartItems; 
+
+        $images = json_decode($productData->image, true) ?? [];
+        $metaTitle = $productData->name . ' - Speech Publications';
+        $metaDescription = Str::limit(strip_tags($productData->description ?? $productData->heading ?? $productData->name), 160);
+        $metaImage = !empty($images) && isset($images[0]) ? Storage::disk('s3')->url('product/'.$images[0]) : asset('images/logo.png');
+
+        $comments = ProductComment::where('product_id', $productData->id)->where('status', 'approved')->orderBy('created_at', 'desc')->paginate(10);
+        $commentsCount = ProductComment::where('product_id', $productData->id)->where('status', 'approved')->count();
    
-        return view('store.shop-details',['product'=>$productData,'relatedProduct'=>$products,'slug'=>$request->slug,'cartItems'=>$cartItems]);
+        return view('store.shop-details',['product'=>$productData,'relatedProduct'=>$products,'slug'=>$request->slug,'cartItems'=>$cartItems, 'metaTitle'=>$metaTitle, 'metaDescription'=>$metaDescription, 'metaImage'=>$metaImage, 'comments'=>$comments, 'commentsCount'=>$commentsCount]);
         // return $product;
         //  return view('store.shop-details',compact('product'));
     }

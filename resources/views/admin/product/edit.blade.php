@@ -278,18 +278,31 @@
                                                     <div class="text-danger">{{ $message }}</div>
                                                     @enderror
                                                 </div>
-                                                <div class="col-xl-6">
-                                                    <div class="mb-3">
-                                                        <label for="is-ebook" class="form-label">Is eBook?</label>
-                                                        <div class="toggle-label d-flex align-items-center">
-                                                            <label class="toggle-switch me-2">
-                                                                <input type="checkbox" id="is-ebook" name="is_ebook" value="1" {{ (old('is_ebook', $product->is_ebook) == 1) ? 'checked' : '' }}>
-                                                                <span class="toggle-slider"></span>
-                                                            </label>
-                                                            <span id="ebook-status">{{ (old('is_ebook', $product->is_ebook) == 1) ? 'Yes' : 'No' }}</span>
-                                                        </div>
+                                            <div class="col-xl-6">
+                                                <div class="mb-3">
+                                                    <label for="is-ebook" class="form-label">Is eBook?</label>
+                                                    <div class="toggle-label d-flex align-items-center">
+                                                        <label class="toggle-switch me-2">
+                                                            <input type="checkbox" id="is-ebook" name="is_ebook" value="1" {{ (old('is_ebook', $product->is_ebook) == 1) ? 'checked' : '' }}>
+                                                            <span class="toggle-slider"></span>
+                                                        </label>
+                                                        <span id="ebook-status">{{ (old('is_ebook', $product->is_ebook) == 1) ? 'Yes' : 'No' }}</span>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="col-xl-6">
+                                                <div class="mb-3">
+                                                    <label for="is-sitemap" class="form-label">Include in Sitemap?</label>
+                                                    <div class="toggle-label d-flex align-items-center">
+                                                        <label class="toggle-switch me-2">
+                                                            <input type="checkbox" id="is-sitemap" name="is_sitemap" value="1" {{ (old('is_sitemap', $product->is_sitemap ?? 1) == 1) ? 'checked' : '' }}>
+                                                            <span class="toggle-slider"></span>
+                                                        </label>
+                                                        <span id="sitemap-status">{{ (old('is_sitemap', $product->is_sitemap ?? 1) == 1) ? 'Yes' : 'No' }}</span>
+                                                    </div>
+                                                    <small class="text-muted">If enabled, this product URL will appear in sitemap.xml</small>
+                                                </div>
+                                            </div>
                                             </div><!-- end row -->
 
                                             <div class="row">
@@ -404,6 +417,15 @@
             if (isEbookCheckbox) {
                 isEbookCheckbox.addEventListener('change', togglePdfSection);
                 togglePdfSection();
+            }
+
+            // Sitemap toggle
+            const isSitemapCheckbox = document.getElementById('is-sitemap');
+            const sitemapStatus = document.getElementById('sitemap-status');
+            if (isSitemapCheckbox) {
+                isSitemapCheckbox.addEventListener('change', function() {
+                    sitemapStatus.textContent = this.checked ? 'Yes' : 'No';
+                });
             }
         });
         function previewImages(event) {
