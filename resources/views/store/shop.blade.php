@@ -5,10 +5,10 @@
  <!-- JSON-LD ItemList Structured Data for Store -->
  <script type="application/ld+json">
  {
-   "@context": "https://schema.org",
-   "@type": "ItemList",
+   "@@context": "https://schema.org",
+   "@@type": "ItemList",
    "name": "Speech Publications Store",
-   "url": "{{ url('/store') }},
+   "url": "{{ url('/store') }}",
    "numberOfItems": {{ $products->total() }},
    "itemListElement": [
      @foreach($products->take(20) as $index => $product)
@@ -17,15 +17,15 @@
        $pUrl = !empty($pImages) && isset($pImages[0]) ? Storage::disk('s3')->url('product/'.$pImages[0]) : asset('images/no-image.png');
      @endphp
      {
-       "@type": "ListItem",
+       "@@type": "ListItem",
        "position": {{ $index + 1 }},
        "item": {
-         "@type": "Product",
+         "@@type": "Product",
          "name": "{{ addslashes($product->name) }}",
          "url": "{{ url('/book-details/'.$product->slug) }}",
          "image": "{{ $pUrl }}",
          "offers": {
-           "@type": "Offer",
+           "@@type": "Offer",
            "price": "{{ $product->price }}",
            "priceCurrency": "INR"
          }
@@ -39,17 +39,17 @@
  <!-- JSON-LD BreadcrumbList -->
  <script type="application/ld+json">
  {
-   "@context": "https://schema.org",
-   "@type": "BreadcrumbList",
+   "@@context": "https://schema.org",
+   "@@type": "BreadcrumbList",
    "itemListElement": [
      {
-       "@type": "ListItem",
+       "@@type": "ListItem",
        "position": 1,
        "name": "Home",
        "item": "{{ url('/') }}"
      },
      {
-       "@type": "ListItem",
+       "@@type": "ListItem",
        "position": 2,
        "name": "Store",
        "item": "{{ url('/store') }}"
