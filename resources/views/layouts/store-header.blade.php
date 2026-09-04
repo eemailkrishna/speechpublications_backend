@@ -7,10 +7,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="pixel-drop">
-    <meta name="description" content="Speech Publications">
+    <meta name="description" content="{{ $metaDescription ?? 'Speech Publications' }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $metaTitle ?? 'Speech Publications' }}">
+    <meta property="og:description" content="{{ $metaDescription ?? 'Speech Publications - Books, News & More' }}">
+    <meta property="og:image" content="{{ $metaImage ?? asset('images/logo.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="Speech Publications">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $metaTitle ?? 'Speech Publications' }}">
+    <meta name="twitter:description" content="{{ $metaDescription ?? 'Speech Publications - Books, News & More' }}">
+    <meta name="twitter:image" content="{{ $metaImage ?? asset('images/logo.png') }}">
+    <!-- Google Search Console Verification (replace with your actual code) -->
+    <meta name="google-site-verification" content="" />
+    <!-- Additional SEO Meta -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="theme-color" content="#7c2a2a">
+    <link rel="alternate" type="application/rss+xml" title="Speech Publications News" href="{{ url('/news') }}">
     <!-- ======== Page title ============ -->
-    <title>Speech Publications</title>
+    <title>{{ $metaTitle ?? 'Speech Publications' }}</title>
     <!--<< Favcion >>-->
     <link rel="shortcut icon" href="{{asset('/store/assets/img/favicon.png')}}">
     <!--<< Bootstrap min.css >>-->

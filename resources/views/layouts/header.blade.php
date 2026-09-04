@@ -17,6 +17,13 @@
 <meta name="twitter:title" content="Speech Publication — Book Publisher in Azamgarh, Uttar Pradesh" />
 <meta name="twitter:description" content="Speech Publication in Azamgarh offers complete book publishing, thesis with ISBN, journal publication, research guidance, distribution & book launch services." />
 <meta name="twitter:image" content="https://speechpublications.com/public/images/logo/Logo2.webp" />
+<!-- Google Search Console Verification (replace with your actual code) -->
+<meta name="google-site-verification" content="" />
+<!-- Additional SEO Meta -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="googlebot" content="index, follow">
+<meta name="theme-color" content="#003366">
+<link rel="canonical" href="https://speechpublications.com/" />
 
 
     <!-- Favicon -->
