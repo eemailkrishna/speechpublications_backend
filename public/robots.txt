@@ -1,5 +1,33 @@
 User-agent: *
-Disallow:
+Disallow: /dashboard
+Disallow: /cart
+Disallow: /checkout
+Disallow: /profile
+Disallow: /order-history
+Disallow: /order-view/
+Disallow: /user-order-history
+Disallow: /product-create
+Disallow: /product-edit/
+Disallow: /product-delete/
+Disallow: /testimonial-add
+Disallow: /testimonial-edit/
+Disallow: /testimonial-delete/
+Disallow: /banner-create
+Disallow: /banner-edit/
+Disallow: /product-category-create
+Disallow: /product-category-edit/
+Disallow: /product-category-delete/
+Disallow: /admin-news/create
+Disallow: /admin-news/edit/
+Disallow: /admin-news-author/create
+Disallow: /admin-news-author/edit/
+Disallow: /admin-news-category/create
+Disallow: /admin-news-category/edit/
+Disallow: /sitemap-list
+Disallow: /sitemap-store
+Disallow: /sitemap-toggle/
+Disallow: /sitemap-delete/
 
 Allow: /
+
 Sitemap: https://speechpublications.com/sitemap.xml

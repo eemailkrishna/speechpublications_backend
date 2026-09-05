@@ -80,6 +80,7 @@ class ProductController extends Controller
             'image' => json_encode($uploadedImages),
             'ebook_pdf' => json_encode($uploadedEbook),
             'is_ebook' => $request->has('is_ebook') ? 1 : 0,
+            'is_sitemap' => $request->has('is_sitemap') ? 1 : 0,
             'heading' => $request->heading,
             'specification' => $request->input('specifications'),
             'inside_the_box' => $request->input('box_contents'),
@@ -206,6 +207,7 @@ class ProductController extends Controller
             'image' => json_encode(array_values($currentImages)), // Store updated images
             'ebook_pdf' => json_encode(array_values($uploadedEbook)),
             'is_ebook' => $request->has('is_ebook') ? 1 : 0,
+            'is_sitemap' => $request->has('is_sitemap') ? 1 : 0,
             'heading' => $request->heading,
             'specification' => $decoded_input,
             'inside_the_box' => $request->input('box_contents'),

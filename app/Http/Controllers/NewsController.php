@@ -64,6 +64,7 @@ class NewsController extends Controller
             : Str::limit(strip_tags($request->description), 200);
         $data['reading_time'] = $this->readingTime($request->description);
         $data['featured'] = $request->has('featured') ? 1 : 0;
+        $data['is_sitemap'] = $request->has('is_sitemap') ? 1 : 0;
 
         if ($request->hasFile('featured_image')) {
             $data['featured_image'] = $this->uploadImage($request->file('featured_image'));
@@ -122,6 +123,7 @@ class NewsController extends Controller
             : Str::limit(strip_tags($request->description), 200);
         $data['reading_time'] = $this->readingTime($request->description);
         $data['featured'] = $request->has('featured') ? 1 : 0;
+        $data['is_sitemap'] = $request->has('is_sitemap') ? 1 : 0;
 
         if ($request->hasFile('featured_image')) {
             if ($news->featured_image) {

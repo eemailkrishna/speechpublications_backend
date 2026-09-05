@@ -2,6 +2,62 @@
 
  <link rel="stylesheet" href="{{ url('public/store/assets/css/store-beauty.css') }}">
 
+ <!-- JSON-LD ItemList Structured Data for Store -->
+ <script type="application/ld+json">
+ {
+   "@@context": "https://schema.org",
+   "@@type": "ItemList",
+   "name": "Speech Publications Store",
+   "url": "{{ url('/store') }}",
+   "numberOfItems": {{ $products->total() }},
+   "itemListElement": [
+     @foreach($products->take(20) as $index => $product)
+     @php
+       $pImages = json_decode($product->image, true) ?? [];
+       $pUrl = !empty($pImages) && isset($pImages[0]) ? Storage::disk('s3')->url('product/'.$pImages[0]) : asset('images/no-image.png');
+     @endphp
+     {
+       "@@type": "ListItem",
+       "position": {{ $index + 1 }},
+       "item": {
+         "@@type": "Product",
+         "name": "{{ addslashes($product->name) }}",
+         "url": "{{ url('/book-details/'.$product->slug) }}",
+         "image": "{{ $pUrl }}",
+         "offers": {
+           "@@type": "Offer",
+           "price": "{{ $product->price }}",
+           "priceCurrency": "INR"
+         }
+       }
+     }{{ $loop->last ? '' : ',' }}
+     @endforeach
+   ]
+ }
+ </script>
+
+ <!-- JSON-LD BreadcrumbList -->
+ <script type="application/ld+json">
+ {
+   "@@context": "https://schema.org",
+   "@@type": "BreadcrumbList",
+   "itemListElement": [
+     {
+       "@@type": "ListItem",
+       "position": 1,
+       "name": "Home",
+       "item": "{{ url('/') }}"
+     },
+     {
+       "@@type": "ListItem",
+       "position": 2,
+       "name": "Store",
+       "item": "{{ url('/store') }}"
+     }
+   ]
+ }
+ </script>
+
  <style>
     .product-title-css {
         display: -webkit-box !important;

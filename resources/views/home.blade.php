@@ -1,6 +1,43 @@
 @extends('layouts.app')
 @section('content')
 
+@verbatim
+<!-- JSON-LD Organization Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Speech Publications",
+  "url": "https://speechpublications.com",
+  "description": "Speech Publications offers a wide range of books, news articles, and publications. Explore our collection today.",
+  "sameAs": [],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "customer service",
+    "availableLanguage": ["English", "Hindi"]
+  }
+}
+</script>
+
+<!-- JSON-LD WebSite Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Speech Publications",
+  "url": "https://speechpublications.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://speechpublications.com/store?search={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+@endverbatim
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 

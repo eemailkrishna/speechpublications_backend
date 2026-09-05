@@ -14,7 +14,12 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\NewsAuthorController;
 use App\Http\Controllers\NewsCategoryController;
 use App\Http\Controllers\NewsFrontController;
+use App\Http\Controllers\ProductCommentController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\Product;
+use App\Models\News;
+use App\Models\Sitemap;
 
 
 // Route::get('/', function () {
@@ -27,6 +32,7 @@ Route::get('/news/author/{slug}', [NewsFrontController::class, 'author'])->name(
 Route::get('/news/category/{slug}', [NewsFrontController::class, 'category'])->name('news.category');
 Route::get('/news/{slug}', [NewsFrontController::class, 'show'])->name('news.details');
 Route::post('/news/comment', [NewsFrontController::class, 'comment'])->name('news.comment');
+Route::post('/product/comment', [ProductCommentController::class, 'store'])->name('product.comment');
 
 
 Route::get('/contact-us', function () {
@@ -142,6 +148,12 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     Route::post('admin-news/{id}/toggle-featured', [NewsController::class, 'toggleFeatured'])->name('admin-news.toggle-featured');
 
+    // Sitemap Management
+    Route::get('/sitemap-list', [SitemapController::class, 'index'])->name('sitemap.list');
+    Route::post('/sitemap-store', [SitemapController::class, 'store'])->name('sitemap.store');
+    Route::get('/sitemap-delete/{id}', [SitemapController::class, 'destroy'])->name('sitemap.delete');
+    Route::post('/sitemap-toggle/{id}', [SitemapController::class, 'toggle'])->name('sitemap.toggle');
+
     Route::resource('admin-news-author', NewsAuthorController::class, [
         'parameters' => ['admin-news-author' => 'author']
     ])->names([
@@ -170,6 +182,83 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::post('/order/update-status', [ProductController::class, 'updateOrderStatus'])
         ->name('order.update-status');
+});
+
+// Dynamic Sitemap
+Route::get('/sitemap.xml', function () {
+    
+    $urls = [];
+    $baseUrl = config('app.url', 'http://localhost');
+
+    // Static pages (always included)
+    $now = now()->toDateString();
+    $urls[] = ['loc' => $baseUrl . '/', 'lastmod' => $now, 'priority' => '1.0', 'changefreq' => 'daily'];
+    $urls[] = ['loc' => $baseUrl . '/store', 'lastmod' => $now, 'priority' => '0.9', 'changefreq' => 'daily'];
+    $urls[] = ['loc' => $baseUrl . '/news', 'lastmod' => $now, 'priority' => '0.8', 'changefreq' => 'daily'];
+    $urls[] = ['loc' => $baseUrl . '/about', 'lastmod' => $now, 'priority' => '0.6', 'changefreq' => 'monthly'];
+    $urls[] = ['loc' => $baseUrl . '/contact-us', 'lastmod' => $now, 'priority' => '0.6', 'changefreq' => 'monthly'];
+
+    // Products (only if is_sitemap = 1)
+    Product::select('slug', 'updated_at', 'status')
+        ->where('status', 'launched')
+        ->where('is_sitemap', 1)
+        ->orderBy('updated_at', 'desc')
+        ->chunk(100, function ($products) use (&$urls, $baseUrl) {
+            foreach ($products as $product) {
+                $urls[] = [
+                    'loc' => $baseUrl . '/book-details/' . $product->slug,
+                    'lastmod' => $product->updated_at ? $product->updated_at->toIso8601String() : now()->toIso8601String(),
+                    'priority' => '0.8',
+                    'changefreq' => 'weekly',
+                ];
+            }
+        });
+
+    // News articles (only if is_sitemap = 1)
+    News::select('slug', 'updated_at', 'publish_date')
+        ->where('status', 'published')
+        ->where('is_sitemap', 1)
+        ->orderBy('publish_date', 'desc')
+        ->chunk(100, function ($news) use (&$urls, $baseUrl) {
+            foreach ($news as $item) {
+                $urls[] = [
+                    'loc' => $baseUrl . '/news/' . $item->slug,
+                    'lastmod' => ($item->updated_at ?? $item->publish_date)->toIso8601String(),
+                    'priority' => '0.7',
+                    'changefreq' => 'weekly',
+                ];
+            }
+        });
+
+    // Custom URLs from sitemaps table
+    Sitemap::where('is_active', true)
+        ->chunk(100, function ($sitemaps) use (&$urls) {
+            foreach ($sitemaps as $sitemap) {
+                $urls[] = [
+                    'loc' => $sitemap->url,
+                    'priority' => $sitemap->priority,
+                    'changefreq' => $sitemap->changefreq,
+                ];
+            }
+        });
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+    foreach ($urls as $url) {
+        $xml .= "  <url>\n";
+        $xml .= "    <loc>" . e($url['loc']) . "</loc>\n";
+        if (!empty($url['lastmod'])) {
+            $xml .= "    <lastmod>" . e($url['lastmod']) . "</lastmod>\n";
+        }
+        $xml .= "    <changefreq>" . e($url['changefreq'] ?? 'monthly') . "</changefreq>\n";
+        $xml .= "    <priority>" . e($url['priority'] ?? '0.5') . "</priority>\n";
+        $xml .= "  </url>\n";
+    }
+    $xml .= '</urlset>';
+
+    return response($xml, 200)
+        ->header('Content-Type', 'application/xml')
+        ->header('Cache-Control', 'public, max-age=3600');
 });
 
 
