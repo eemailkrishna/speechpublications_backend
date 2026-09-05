@@ -3,6 +3,13 @@
 <link rel="stylesheet" href="{{ url('public/store/assets/css/store-beauty.css') }}">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+@php
+  $images = json_decode($product->image, true) ?? [];
+  $imageUrl = !empty($images) && isset($images[0])
+      ? Storage::disk('s3')->url('product/'.$images[0])
+      : asset('images/no-image.png');
+@endphp
+
 <!-- JSON-LD Product Structured Data -->
 <script type="application/ld+json">
 {
