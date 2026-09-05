@@ -8,19 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            if (!Schema::hasColumn('products', 'is_sitemap')) {
-                $table->boolean('is_sitemap')->default(true)->after('is_popular');
-            }
-        });
+        $columns = \Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM products LIKE 'is_sitemap'");
+        if (empty($columns)) {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE products ADD is_sitemap TINYINT(1) NOT NULL DEFAULT 1 AFTER is_popular");
+        }
     }
 
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table) {
-            if (Schema::hasColumn('products', 'is_sitemap')) {
-                $table->dropColumn('is_sitemap');
-            }
-        });
+        $columns = \Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM products LIKE 'is_sitemap'");
+        if (!empty($columns)) {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE products DROP COLUMN is_sitemap");
+        }
     }
 };

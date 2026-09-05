@@ -8,19 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('news', function (Blueprint $table) {
-            if (!Schema::hasColumn('news', 'is_sitemap')) {
-                $table->boolean('is_sitemap')->default(true)->after('is_highlight');
-            }
-        });
+        $columns = \Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM news LIKE 'is_sitemap'");
+        if (empty($columns)) {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE news ADD is_sitemap TINYINT(1) NOT NULL DEFAULT 1 AFTER is_highlight");
+        }
     }
 
     public function down(): void
     {
-        Schema::table('news', function (Blueprint $table) {
-            if (Schema::hasColumn('news', 'is_sitemap')) {
-                $table->dropColumn('is_sitemap');
-            }
-        });
+        $columns = \Illuminate\Support\Facades\DB::select("SHOW COLUMNS FROM news LIKE 'is_sitemap'");
+        if (!empty($columns)) {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE news DROP COLUMN is_sitemap");
+        }
     }
 };
