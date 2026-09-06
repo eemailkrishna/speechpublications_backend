@@ -200,6 +200,10 @@
                                         {{ $news->approved_comments_count ?? $comments->total() }} Comments
                                     </li>
                                     <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
+                                        <i class="fa-light fa-eye" style="color: var(--sp-maroon);"></i>
+                                        {{ number_format($news->view_count ?? 0) }} Views
+                                    </li>
+                                    <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
                                         <i class="fa-light fa-tag" style="color: var(--sp-maroon);"></i>
                                         {{ $news->category->name ?? 'News' }}
                                     </li>
