@@ -143,7 +143,7 @@
                         <div class="col-md-3" data-aos="fade-up" style="margin-top: 20px;">
                             <a href="{{ url('/news/'.$h->slug) }}" style="text-decoration: none; color: inherit; display: block; height: 100%;">
                                 <div style="background: #fff; border: 1px solid var(--sp-line); border-radius: 10px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; height: 100%; display: flex; flex-direction: column;">
-                                    <div style="height: 180px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <div style="height: 165px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                         @if($h->featured_image)
                                             <img src="{{ $h->featured_image }}" alt="{{ $h->title }}" style="width: 100%; height: 100%;">
                                         @else
@@ -153,7 +153,7 @@
                                     <div style="padding: 16px; flex: 1; display: flex; flex-direction: column;">
                                         <h5 style="font-family: var(--font-serif); font-size: 16px; font-weight: 600; color: var(--sp-ink); margin-bottom: 8px; line-height: 1.3;">{{ $h->title }}</h5>
                                         <p style="font-size: 13px; color: var(--sp-muted); line-height: 1.6; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">{{ Str::limit(strip_tags($h->excerpt ?? $h->description), 120) }}</p>
-                                        <span style="font-size: 13px; font-weight: 600; color: var(--sp-maroon); display: inline-flex; align-items: center; gap: 4px; margin-top: 8px;">Read <i class="fas fa-arrow-right" style="font-size: 11px;"></i></span>
+                                        <span style="font-size: 13px; font-weight: 600; color: #1a73e8; display: inline-flex; align-items: center; gap: 4px; margin-top: 8px;">Read More <i class="fas fa-arrow-right" style="font-size: 11px;"></i></span>
                                     </div>
                                 </div>
                             </a>
@@ -177,7 +177,7 @@
                             @endphp
                             <a href="{{ url('/book-details/'.$p->slug) }}" style="text-decoration: none; color: inherit; display: block; height: 100%; width: 100%;">
                                 <div style="background: #fff; border: 1px solid var(--sp-line); border-radius: 10px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; height: 100%; display: flex; flex-direction: column;">
-                                    <div style="height: 250px; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <div style="height: auto; overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                         <img src="{{ $imgUrl }}" alt="{{ $p->name }}" style="width: 100%; height: 100%;">
                                     </div>
                                     <div style="padding: 14px; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center;">
