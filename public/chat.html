@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realtime Chat</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .wrap { width: 400px; height: 700px; background: white; border-radius: 12px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .setup { padding: 30px; text-align: center; }
+        .setup h2 { color: #7c2a2a; margin-bottom: 20px; }
+        .setup input { width: 100%; padding: 12px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+        .setup button { width: 100%; padding: 12px; background: #7c2a2a; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .setup button:disabled { background: #ccc; }
+        .chat { display: none; flex-direction: column; height: 100%; }
+        .hdr { background: #7c2a2a; color: white; padding: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .hdr .dot { width: 10px; height: 10px; border-radius: 50%; background: #555; }
+        .hdr .dot.on { background: #3fb950; }
+        .msgs { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 6px; background: #e5ddd5; }
+        .m { max-width: 70%; padding: 8px 12px; border-radius: 10px; font-size: 13px; line-height: 1.3; word-break: break-word; }
+        .m.out { align-self: flex-end; background: #dcf8c6; border-bottom-right-radius: 2px; }
+        .m.in { align-self: flex-start; background: white; border-bottom-left-radius: 2px; }
+        .m small { display: block; font-size: 9px; color: #999; margin-top: 3px; text-align: right; }
+        .bar { padding: 10px; background: #f0f2f5; display: flex; gap: 8px; }
+        .bar input { flex: 1; padding: 10px; border: none; border-radius: 20px; font-size: 13px; outline: none; }
+        .bar button { width: 40px; height: 40px; border-radius: 50%; background: #7c2a2a; color: white; border: none; cursor: pointer; font-size: 16px; }
+        .log { height: 100px; background: #0d1117; color: #58a6ff; font-family: monospace; font-size: 10px; overflow-y: auto; padding: 6px; }
+        .log .ok { color: #3fb950; } .log .er { color: #f85149; }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+    <div class="setup" id="setup">
+        <h2>Realtime Chat</h2>
+        <input type="number" id="myId" placeholder="Your User ID (e.g. 42)">
+        <input type="number" id="peerId" placeholder="Friend User ID (e.g. 43)">
+        <button onclick="start()" id="startBtn">Start Chat</button>
+    </div>
+    <div class="chat" id="chat">
+        <div class="hdr">
+            <span id="chatTitle">Chat</span>
+            <div class="dot" id="dot"></div>
+        </div>
+        <div class="msgs" id="msgs"></div>
+        <div class="bar">
+            <input type="text" id="inp" placeholder="Type..." onkeypress="if(event.key==='Enter')send()">
+            <button onclick="send()">➤</button>
+        </div>
+    </div>
+    <div class="log" id="log"></div>
+</div>
+
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+var PUSHER_KEY = '43e9e4dad16b21729655';
+var PUSHER_CLUSTER = 'ap2';
+var API = window.location.pathname.includes('speech-publication') ? '/speech-publication/api' : '/api';
+var pusher, channel, myId, peerId, channelName;
+
+function log(t, c) {
+    var d = document.createElement('div');
+    d.className = c || '';
+    d.textContent = new Date().toLocaleTimeString() + ' ' + t;
+    var el = document.getElementById('log');
+    el.appendChild(d);
+    el.scrollTop = el.scrollHeight;
+}
+
+function msg(text, sender, time) {
+    var el = document.createElement('div');
+    el.className = 'm ' + (sender == myId ? 'out' : 'in');
+    el.innerHTML = text + '<small>' + (time || new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})) + '</small>';
+    document.getElementById('msgs').appendChild(el);
+    document.getElementById('msgs').scrollTop = 99999;
+}
+
+var convId = null;
+
+async function start() {
+    myId = document.getElementById('myId').value;
+    peerId = document.getElementById('peerId').value;
+    if (!myId || !peerId) return alert('Enter both IDs');
+    if (myId === peerId) return alert('IDs must be different');
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('startBtn').textContent = 'Connecting...';
+
+    try {
+        // Create conversation to get convId (no auth needed - uses test route)
+        log('Creating conversation...');
+        var r = await fetch('/speech-publication/api/test/conversations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ user_id: parseInt(peerId), sender_id: parseInt(myId) })
+        });
+        var d = await r.json();
+        convId = d.id;
+        if (!convId) { log('No conversation ID', 'er'); document.getElementById('startBtn').disabled = false; return; }
+        log('Conversation #' + convId, 'ok');
+
+        channelName = 'conversation.' + convId;
+        log('Connecting to ' + channelName + '...');
+
+        Pusher.logToConsole = true;
+        pusher = new Pusher(PUSHER_KEY, {
+            cluster: PUSHER_CLUSTER,
+            forceTLS: true,
+            disableStats: true,
+            enabledTransports: ['ws', 'wss']
+        });
+
+        pusher.connection.bind('connected', function() {
+            log('WebSocket connected!', 'ok');
+            document.getElementById('dot').classList.add('on');
+        });
+
+        channel = pusher.subscribe(channelName);
+
+        channel.bind('pusher:subscription_succeeded', function() {
+            log('Ready! Type and send.', 'ok');
+            document.getElementById('setup').style.display = 'none';
+            document.getElementById('chat').style.display = 'flex';
+            document.getElementById('chatTitle').textContent = 'You: ' + myId + ' | Friend: ' + peerId;
+        });
+
+        // Receiver gets message via WebSocket instantly - no API hit needed
+        channel.bind('message.sent', function(data) {
+            if (data.sender_id != myId) {
+                msg(data.text, data.sender_id);
+                log('Recv: ' + data.text, 'ok');
+            }
+        });
+
+        channel.bind('pusher:subscription_error', function(e) {
+            log('Subscribe error', 'er');
+        });
+    } catch(e) {
+        log('Error: ' + e.message, 'er');
+        document.getElementById('startBtn').disabled = false;
+    }
+}
+
+function send() {
+    var inp = document.getElementById('inp');
+    var text = inp.value.trim();
+    if (!text || !convId) return;
+
+    // Sender hits API once, server broadcasts via WebSocket to receiver
+    fetch('/speech-publication/api/test/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ sender_id: parseInt(myId), receiver_id: parseInt(peerId), text: text })
+    }).then(function(r){ return r.json(); }).then(function(d){
+        if(d.message === 'sent'){
+            msg(text, myId);
+            inp.value = '';
+            log('Sent: ' + text, 'ok');
+        } else {
+            log('Send failed', 'er');
+        }
+    });
+}
+</script>
+</body>
+</html>

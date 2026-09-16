@@ -2,214 +2,119 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Conversation;
 use App\Models\Message;
-use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Events\MessageSent;
+use App\Events\MessageRead;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class MessageController extends Controller
 {
-    // API 17: Get Conversations
-    public function getConversations(Request $request)
+    public function index(Request $request, $conversationId)
     {
-        $validated = $request->validate([
-            'page' => 'nullable|integer|min:1',
-            'limit' => 'nullable|integer|min:1|max:100',
-        ]);
+        $userId = $request->input('sender_id', 1);
 
-        $page = $validated['page'] ?? 1;
-        $limit = $validated['limit'] ?? 20;
-        $userId = auth('api')->id();
-
-        // Get unique conversation IDs
-        $conversationIds = Message::where(function ($query) use ($userId) {
-            $query->where('sender_id', $userId)
-                  ->orWhere('receiver_id', $userId);
-        })->distinct('conversation_id')->pluck('conversation_id');
-
-        // Get last message for each conversation
-        $messages = Message::whereIn('conversation_id', $conversationIds)
-            ->orderBy('created_at', 'desc')
-            ->distinct('conversation_id')
-            ->paginate($limit, ['*'], 'page', $page);
-
-        $conversations = [];
-
-        foreach ($messages as $message) {
-            $otherUserId = $message->sender_id === $userId ? $message->receiver_id : $message->sender_id;
-            $otherUser = User::find($otherUserId);
-
-            // Get unread count
-            $unreadCount = Message::where('conversation_id', $message->conversation_id)
-                ->where('receiver_id', $userId)
-                ->where('is_read', false)
-                ->count();
-
-            $conversations[] = [
-                'id' => $message->conversation_id,
-                'user' => [
-                    'id' => $otherUser->id,
-                    'full_name' => $otherUser->full_name,
-                    'username' => $otherUser->username,
-                    'profile_photo' => $otherUser->profile_photo,
-                    'is_online' => false, // TODO: Implement online status via Redis
-                ],
-                'last_message' => [
-                    'content' => $message->content,
-                    'sender_id' => $message->sender_id,
-                    'is_read' => $message->is_read,
-                    'created_at' => $message->created_at ? $message->created_at->diffForHumans() : null,
-                ],
-                'unread_count' => $unreadCount,
-                'updated_at' => $message->created_at ? $message->created_at->diffForHumans() : null,
-            ];
+        $conversation = Conversation::find($conversationId);
+        if (! $conversation) {
+            return response()->json(['message' => 'Conversation not found'], 404);
         }
-
-        return response()->json([
-            'success' => true,
-            'conversations' => $conversations,
-        ]);
-    }
-
-    // API 18: Get Messages in Conversation
-    public function getMessages($conversationId, Request $request)
-    {
-        $validated = $request->validate([
-            'page' => 'nullable|integer|min:1',
-            'limit' => 'nullable|integer|min:1|max:100',
-        ]);
-
-        $page = $validated['page'] ?? 1;
-        $limit = $validated['limit'] ?? 50;
-        $userId = auth('api')->id();
 
         $messages = Message::where('conversation_id', $conversationId)
-            ->orderBy('created_at', 'asc')
-            ->paginate($limit, ['*'], 'page', $page);
+            ->with('sender:id,name,profile_photo')
+            ->orderBy('created_at', 'desc')
+            ->paginate($request->limit ?? 50);
 
-        // Get other user in conversation
-        $firstMessage = $messages->first();
-        $otherUserId = $firstMessage->sender_id === $userId ? $firstMessage->receiver_id : $firstMessage->sender_id;
-        $otherUser = User::find($otherUserId);
-
-        if(!$otherUser) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'USER_NOT_FOUND',
-                    'message' => 'The other user in this conversation does not exist.',
-                ]
-            ], 404);
-        }
-        // Mark received messages as read
-        Message::where('conversation_id', $conversationId)
-            ->where('receiver_id', $userId)
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
-
-        return response()->json([
-            'success' => true,
-            'user' => [
-                'id' => @$otherUser->id,
-                'full_name' => @$otherUser->full_name,
-                'username' => @$otherUser->username,
-                'profile_photo' => @$otherUser->profile_photo,
-                'is_online' => false,
-            ],
-            'messages' => $messages->map(function ($msg) use ($userId) {
-                return [
-                    'id' => $msg->id,
-                    'sender_id' => $msg->sender_id,
-                    'content' => $msg->content,
-                    'type' => $msg->type,
-                    'is_read' => $msg->is_read,
-                    'created_at' => $msg->created_at->format('h:i A'),
-                ];
-            })->toArray(),
-        ]);
+        return response()->json($messages);
     }
 
-    // API 19: Send Message
-    public function sendMessage(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
-            'receiver_id' => 'required|string|exists:users,id',
-            'content' => 'required|string|max:5000',
-            'type' => 'nullable|in:text,image,video,audio',
+            'sender_id' => 'nullable|integer',
+            'receiver_id' => 'required|integer',
+            'text' => 'required|string|max:5000',
         ]);
 
-        $senderId = auth('api')->id();
+        $senderId = $validated['sender_id'] ?? auth('api')->id();
         $receiverId = $validated['receiver_id'];
 
-        if ($senderId === $receiverId) {
-            return response()->json([
-                'success' => false,
-                'error' => [
-                    'code' => 'VALIDATION_ERROR',
-                    'message' => 'Cannot send message to yourself',
-                ]
-            ], 400);
+        if (!$senderId) {
+            return response()->json(['message' => 'sender_id required'], 422);
         }
 
-        // Generate or get conversation ID
-        $conversationId = $this->getOrCreateConversationId($senderId, $receiverId);
+        if (!\App\Models\User::find($senderId) || !\App\Models\User::find($receiverId)) {
+            return response()->json(['message' => 'User not found. Use existing IDs: 42,43,44,45,46,47'], 404);
+        }
 
-        $message = Message::create([
-            'id' => Str::uuid(),
-            'sender_id' => $senderId,
-            'receiver_id' => $receiverId,
-            'conversation_id' => $conversationId,
-            'content' => $validated['content'],
-            'type' => $validated['type'] ?? 'text',
-            'is_read' => false,
-            'created_at' => now(),
-        ]);
+        if ($senderId == $receiverId) {
+            return response()->json(['message' => 'Cannot send message to yourself'], 422);
+        }
 
-        // TODO: Emit WebSocket event for real-time delivery
+        $conversation = Conversation::between($senderId, $receiverId);
+        if (! $conversation) {
+            $conversation = Conversation::create([
+                'user_one_id' => min($senderId, $receiverId),
+                'user_two_id' => max($senderId, $receiverId),
+            ]);
+        }
+
+        $message = DB::transaction(function () use ($conversation, $senderId, $receiverId, $validated) {
+            $message = Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_id' => $senderId,
+                'receiver_id' => $receiverId,
+                'text' => $validated['text'],
+                'status' => 'sent',
+            ]);
+
+            $conversation->update([
+                'last_message' => $validated['text'],
+                'last_message_at' => now(),
+            ]);
+
+            return $message;
+        });
+
+        $message->load('sender:id,name,profile_photo');
+
+        try {
+            broadcast(new MessageSent($message));
+        } catch (\Exception $e) {
+            \Log::error('Broadcast failed: ' . $e->getMessage());
+        }
 
         return response()->json([
-            'success' => true,
-            'message' => [
+            'message' => 'sent',
+            'data' => [
                 'id' => $message->id,
+                'conversation_id' => $message->conversation_id,
                 'sender_id' => $message->sender_id,
-                'receiver_id' => $message->receiver_id,
-                'content' => $message->content,
-                'type' => $message->type,
-                'is_read' => false,
-                'created_at' => $message->created_at->format('h:i A'),
+                'text' => $message->text,
+                'status' => $message->status,
+                'created_at' => $message->created_at->toISOString(),
+                'sender' => [
+                    'id' => $message->sender->id,
+                    'name' => $message->sender->name,
+                    'avatar' => $message->sender->profile_photo,
+                ],
             ],
         ], 201);
     }
 
-    // API 20: Mark Messages as Read
-    public function markMessagesAsRead($conversationId)
+    public function markAsRead(Request $request, $id)
     {
-        Message::where('conversation_id', $conversationId)
-            ->where('receiver_id', auth('api')->id())
-            ->update(['is_read' => true]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Messages marked as read',
-        ]);
-    }
-
-    // Helper: Get or create conversation ID
-    private function getOrCreateConversationId($senderId, $receiverId)
-    {
-        // Look for existing conversation
-        $existingMessage = Message::where(function ($query) use ($senderId, $receiverId) {
-            $query->where('sender_id', $senderId)->where('receiver_id', $receiverId);
-        })->orWhere(function ($query) use ($senderId, $receiverId) {
-            $query->where('sender_id', $receiverId)->where('receiver_id', $senderId);
-        })->first();
-
-        if ($existingMessage) {
-            return $existingMessage->conversation_id;
+        $message = Message::find($id);
+        if (! $message) {
+            return response()->json(['message' => 'Message not found'], 404);
         }
 
-        // Create new conversation ID
-        return Str::uuid();
+        if ($message->status !== 'read') {
+            $message->update(['status' => 'read']);
+            broadcast(new MessageRead($message))->toOthers();
+        }
+
+        return response()->json(['message' => 'marked as read']);
     }
 }

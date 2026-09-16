@@ -84,6 +84,7 @@
   @media (max-width: 991px) {
     .footer-section .footer-widget-wrapper { display: none; }
     .footer-section .footer-bottom { padding: 16px 0 !important; }
+    /* .sp-details-qty input { border: none !important; } */
   }
 </style>
 
@@ -249,31 +250,6 @@
             @endif
           @else
             <button type="button" class="sp-details-coming-soon" disabled>Coming Soon</button>
-          @endif
-
-          <!-- Meta Strip -->
-          @php
-            $metaItems = [];
-            if($product->specification) {
-              preg_match_all('/<td[^>]*>(.*?)<\/td>/s', $product->specification, $tds);
-              $specLabels = ['Language', 'Subject', 'Category', 'Pages', 'Edition', 'Paper Quality', 'Publication Year', 'Contributors', 'Publisher'];
-              foreach($tds[1] as $i => $td) {
-                $val = strip_tags(trim($td));
-                if(in_array($val, $specLabels) && isset($tds[1][$i+1])) {
-                  $metaItems[] = strip_tags(trim($tds[1][$i+1]));
-                }
-              }
-            }
-          @endphp
-          @if(count($metaItems) > 0)
-          <div class="sp-details-meta">
-            @foreach($metaItems as $mi => $meta)
-              <span>{{ $meta }}</span>
-              @if($mi < count($metaItems) - 1)
-                <span class="sp-meta-sep">·</span>
-              @endif
-            @endforeach
-          </div>
           @endif
 
         </div>

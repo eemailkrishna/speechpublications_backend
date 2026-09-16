@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\FollowController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\StoryController;
 
@@ -20,6 +21,24 @@ Route::group([], function () {
     Route::post('auth/login', [AuthController::class, 'login']);
     Route::post('auth/complete-profile', [AuthController::class, 'completeProfile']);
     Route::post('auth/refresh-token', [AuthController::class, 'refreshToken']);
+
+    // Test: Get token by user ID (for testing only)
+    Route::get('test/token/{userId}', function ($userId) {
+        $user = \App\Models\User::find($userId);
+        if (!$user) return response()->json(['error' => 'User not found'], 404);
+        $token = \Firebase\JWT\JWT::encode([
+            'iat' => time(),
+            'exp' => time() + 86400,
+            'user_id' => $user->id,
+            'phone_number' => $user->phone_number,
+        ], config('app.jwt_secret'), 'HS256');
+        return response()->json(['token' => $token, 'user' => ['id' => $user->id, 'name' => $user->name]]);
+    });
+
+    // Test chat routes (no auth for testing)
+    Route::post('test/conversations', [ConversationController::class, 'store']);
+    Route::post('test/messages', [MessageController::class, 'store']);
+    Route::get('test/conversations/{id}/messages', [MessageController::class, 'index']);
 });
 
 // Protected routes (require authentication)
@@ -66,11 +85,21 @@ Route::middleware(\App\Http\Middleware\JwtMiddleware::class)->group(function () 
     Route::get('/firebase-check', [NotificationController::class, 'check']);
 
 
-    // Messaging
-    Route::get('messages/conversations', [MessageController::class, 'getConversations']);
-    Route::get('messages/conversations/{conversationId}', [MessageController::class, 'getMessages']);
-    Route::post('messages/send', [MessageController::class, 'sendMessage']);
-    Route::put('messages/conversations/{conversationId}/read', [MessageController::class, 'markMessagesAsRead']);
+    // Conversations
+    Route::get('conversations', [ConversationController::class, 'index']);
+    Route::post('conversations', [ConversationController::class, 'store']);
+
+    // Messages
+    Route::get('conversations/{id}/messages', [MessageController::class, 'index']);
+    Route::post('messages', [MessageController::class, 'store']);
+    Route::post('messages/{id}/read', [MessageController::class, 'markAsRead']);
+
+    // Broadcasting auth (for WebSocket channel subscriptions)
+    Route::post('broadcasting/auth', function (Request $request) {
+        $user = auth('api')->user();
+        $request->setUserResolver(fn () => $user);
+        return \Illuminate\Support\Facades\Broadcast::auth($request);
+    });
 
 
 
