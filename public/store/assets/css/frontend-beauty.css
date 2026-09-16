@@ -925,7 +925,7 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 767px) {
   .breadcrumb-wrapper .page-heading h1 { font-size: 19px !important; }
   .news-card-items .news-content h3 { font-size: 13px !important; }
-  .news-card-items .news-image img { height: 140px !important; }
+  .news-card-items .news-image img { height: 200px !important; }
   .sp-filter-fab { display: flex; }
   .footer-section .footer-widget-wrapper { display: none; }
   .footer-section .footer-bottom { padding: 16px 0 !important; }

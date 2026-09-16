@@ -28,6 +28,8 @@ class User extends Authenticatable
         'bio',
         'profile_photo',
         'is_verified',
+        'followers_count',
+        'following_count',
     ];
 
     /**
@@ -105,9 +107,20 @@ public function getRoleAttribute()
         return $this->following();
     }
     public function isFollowing(User $user)
-{
-    return $this->following()
-        ->where('following_id', $user->id)
-        ->exists();
-}
+    {
+        return $this->following()
+            ->where('following_id', $user->id)
+            ->exists();
+    }
+
+    public function conversations()
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_participants')
+            ->withTimestamps();
+    }
+
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class);
+    }
 }
