@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Demo - Speech Publications</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; height: 100vh; }
+
+        .login-screen {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; gap: 40px; padding: 20px;
+        }
+        .login-card {
+            background: white; border-radius: 16px; padding: 30px;
+            width: 350px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center;
+        }
+        .login-card h2 { margin-bottom: 20px; color: #1a1a1a; }
+        .login-card input {
+            width: 100%; padding: 12px 16px; border: 1px solid #ddd;
+            border-radius: 8px; font-size: 14px; margin-bottom: 12px;
+        }
+        .login-card button {
+            width: 100%; padding: 12px; background: #7c2a2a; color: white;
+            border: none; border-radius: 8px; font-size: 16px; cursor: pointer;
+            font-weight: 600;
+        }
+        .login-card button:hover { background: #5e1f1f; }
+
+        .chat-container { display: none; height: 100vh; }
+        .chat-header {
+            background: #7c2a2a; color: white; padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .chat-header h3 { font-size: 18px; }
+        .chat-header .status { font-size: 12px; opacity: 0.8; }
+        .chat-header button {
+            background: rgba(255,255,255,0.2); color: white; border: none;
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;
+        }
+
+        .chat-body { display: flex; height: calc(100vh - 64px); }
+
+        .user-panel {
+            width: 300px; background: white; border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+        .user-panel-header {
+            padding: 16px; border-bottom: 1px solid #e0e0e0;
+            font-weight: 600; color: #333;
+        }
+        .user-item {
+            padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f0f0f0;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .user-item:hover { background: #f5f5f5; }
+        .user-item.active { background: #fff3e0; }
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: #7c2a2a; color: white; display: flex;
+            align-items: center; justify-content: center; font-weight: 600;
+        }
+        .user-info { flex: 1; }
+        .user-name { font-weight: 600; font-size: 14px; color: #1a1a1a; }
+        .user-status { font-size: 12px; color: #888; }
+
+        .messages-area { flex: 1; display: flex; flex-direction: column; }
+        .messages-list {
+            flex: 1; overflow-y: auto; padding: 20px; display: flex;
+            flex-direction: column; gap: 12px;
+        }
+        .message {
+            max-width: 70%; padding: 10px 16px; border-radius: 18px;
+            font-size: 14px; line-height: 1.4; word-wrap: break-word;
+        }
+        .message.sent {
+            align-self: flex-end; background: #7c2a2a; color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .message.received {
+            align-self: flex-start; background: white; color: #1a1a1a;
+            border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        .message-time {
+            font-size: 11px; opacity: 0.7; margin-top: 4px; text-align: right;
+        }
+        .message.received .message-time { text-align: left; color: #888; }
+
+        .message-input {
+            padding: 16px; background: white; border-top: 1px solid #e0e0e0;
+            display: flex; gap: 12px; align-items: center;
+        }
+        .message-input input {
+            flex: 1; padding: 12px 16px; border: 1px solid #ddd;
+            border-radius: 24px; font-size: 14px; outline: none;
+        }
+        .message-input input:focus { border-color: #7c2a2a; }
+        .message-input button {
+            width: 44px; height: 44px; border-radius: 50%; background: #7c2a2a;
+            color: white; border: none; cursor: pointer; font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .message-input button:hover { background: #5e1f1f; }
+
+        .no-chat-selected {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            color: #888; font-size: 16px;
+        }
+
+        .log-panel {
+            width: 300px; background: #1a1a2e; color: #00ff41;
+            font-family: 'Courier New', monospace; font-size: 12px;
+            overflow-y: auto; padding: 12px; border-left: 1px solid #333;
+        }
+        .log-panel h4 { color: #00ff41; margin-bottom: 8px; font-size: 13px; }
+        .log-entry { margin-bottom: 4px; word-break: break-all; }
+        .log-entry.sent { color: #ff6b6b; }
+        .log-entry.received { color: #51cf66; }
+        .log-entry.info { color: #ffd43b; }
+        .log-entry.error { color: #ff4444; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+    <div class="login-card">
+        <h2>👤 User A</h2>
+        <input type="text" id="tokenA" placeholder="JWT Token for User A">
+        <input type="number" id="userIdA" placeholder="User A ID" value="1">
+        <button onclick="loginUser('A')">Login as User A</button>
+    </div>
+    <div class="login-card">
+        <h2>👤 User B</h2>
+        <input type="text" id="tokenB" placeholder="JWT Token for User B">
+        <input type="number" id="userIdB" placeholder="User B ID" value="2">
+        <button onclick="loginUser('B')">Login as User B</button>
+    </div>
+</div>
+
+<!-- Chat Screen -->
+<div class="chat-container" id="chatScreen">
+    <div class="chat-header">
+        <div>
+            <h3>💬 Chat Demo</h3>
+            <div class="status" id="connectionStatus">Connecting...</div>
+        </div>
+        <button onclick="disconnect()">Disconnect</button>
+    </div>
+
+    <div class="chat-body">
+        <!-- Users Panel -->
+        <div class="user-panel">
+            <div class="user-panel-header">Conversations</div>
+            <div id="conversationsList"></div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="messages-area">
+            <div class="no-chat-selected" id="noChatMsg">Select a conversation to start chatting</div>
+            <div class="messages-list hidden" id="messagesList"></div>
+            <div class="message-input hidden" id="messageInput">
+                <input type="text" id="messageText" placeholder="Type a message..."
+                       onkeypress="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+
+        <!-- Log Panel -->
+        <div class="log-panel">
+            <h4>📋 WebSocket Log</h4>
+            <div id="logPanel"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+const API_BASE = 'http://localhost/speech-publication';
+let pusherA = null, pusherB = null;
+let currentUser = null;
+let currentConversationId = null;
+let activePusher = null;
+let activeChannel = null;
+
+function log(msg, type = 'info') {
+    const panel = document.getElementById('logPanel');
+    const entry = document.createElement('div');
+    entry.className = 'log-entry ' + type;
+    entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    panel.appendChild(entry);
+    panel.scrollTop = panel.scrollHeight;
+}
+
+function loginUser(user) {
+    const token = document.getElementById('token' + user).value;
+    const userId = document.getElementById('userId' + user).value;
+
+    if (!token) {
+        alert('Enter JWT token for User ' + user);
+        return;
+    }
+
+    currentUser = { user, token, userId };
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('chatScreen').style.display = 'block';
+
+    log('User ' + user + ' (ID: ' + userId + ') logged in', 'info');
+
+    connectWebSocket(token);
+    loadConversations(token);
+}
+
+function connectWebSocket(token) {
+    const appKey = 'EcuFjLB9tkrkOANRwTy8';
+
+    log('Connecting to Reverb WebSocket...', 'info');
+
+    activePusher = new Pusher(appKey, {
+        wsHost: 'localhost',
+        wsPort: 8080,
+        wssPort: 8080,
+        forceTLS: false,
+        enabledTransports: ['ws'],
+        authEndpoint: API_BASE + '/broadcasting/auth',
+        auth: {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
+            }
+        }
+    });
+
+    activePusher.connection.bind('connected', () => {
+        document.getElementById('connectionStatus').textContent = '✅ Connected';
+        log('WebSocket connected!', 'info');
+    });
+
+    activePusher.connection.bind('disconnected', () => {
+        document.getElementById('connectionStatus').textContent = '❌ Disconnected';
+        log('WebSocket disconnected!', 'error');
+    });
+
+    activePusher.connection.bind('error', (err) => {
+        log('WebSocket error: ' + JSON.stringify(err), 'error');
+    });
+}
+
+async function loadConversations(token) {
+    log('Loading conversations...', 'info');
+
+    try {
+        const res = await fetch(API_BASE + '/api/messages/conversations?page=1&limit=20', {
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            log('Loaded ' + data.conversations.length + ' conversations', 'info');
+            renderConversations(data.conversations);
+        } else {
+            log('Error loading conversations: ' + JSON.stringify(data), 'error');
+        }
+    } catch (err) {
+        log('API error: ' + err.message, 'error');
+    }
+}
+
+function renderConversations(conversations) {
+    const list = document.getElementById('conversationsList');
+    list.innerHTML = '';
+
+    if (conversations.length === 0) {
+        list.innerHTML = '<div style="padding:16px;color:#888;text-align:center">No conversations yet.<br>Send a message to start one.</div>';
+        return;
+    }
+
+    conversations.forEach(conv => {
+        const item = document.createElement('div');
+        item.className = 'user-item' + (conv.id == currentConversationId ? ' active' : '');
+        item.innerHTML = `
+            <div class="user-avatar">${conv.user?.full_name?.[0] || '?'}</div>
+            <div class="user-info">
+                <div class="user-name">${conv.user?.full_name || 'Unknown'}</div>
+                <div class="user-status">${conv.last_message?.content?.substring(0, 30) || 'No messages'}</div>
+            </div>
+            ${conv.unread_count > 0 ? '<span style="background:#7c2a2a;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px">' + conv.unread_count + '</span>' : ''}
+        `;
+        item.onclick = () => openConversation(conv.id, conv.user);
+        list.appendChild(item);
+    });
+}
+
+function openConversation(conversationId, user) {
+    currentConversationId = conversationId;
+
+    document.getElementById('noChatMsg').classList.add('hidden');
+    document.getElementById('messagesList').classList.remove('hidden');
+    document.getElementById('messageInput').classList.remove('hidden');
+
+    // Subscribe to conversation channel
+    if (activeChannel) {
+        activePusher.unsubscribe(activeChannel.name);
+    }
+
+    const channelName = 'private-conversation.' + conversationId;
+    activeChannel = activePusher.subscribe(channelName);
+
+    activeChannel.bind('pusher:subscription_succeeded', () => {
+        log('Subscribed to channel: ' + channelName, 'info');
+    });
+
+    activeChannel.bind('pusher:subscription_error', (err) => {
+        log('Subscription error: ' + JSON.stringify(err), 'error');
+    });
+
+    activeChannel.bind('message.sent', (data) => {
+        log('📩 Message received: ' + data.content, 'received');
+        addMessage(data, data.sender_id == currentUser.userId ? 'sent' : 'received');
+    });
+
+    activeChannel.bind('message.read', (data) => {
+        log('✅ Messages read by user: ' + data.read_by_user_id, 'info');
+    });
+
+    // Load messages
+    loadMessages(conversationId);
+
+    // Update UI
+    document.querySelectorAll('.user-item').forEach(el => el.classList.remove('active'));
+    event.currentTarget?.classList.add('active');
+
+    log('Opened conversation #' + conversationId, 'info');
+}
+
+async function loadMessages(conversationId) {
+    const list = document.getElementById('messagesList');
+    list.innerHTML = '';
+
+    try {
+        const res = await fetch(API_BASE + '/api/messages/conversations/' + conversationId + '?page=1&limit=50', {
+            headers: {
+                'Authorization': 'Bearer ' + currentUser.token,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+
+        if (data.success) {
+            data.messages.forEach(msg => {
+                addMessage(msg, msg.sender_id == currentUser.userId ? 'sent' : 'received');
+            });
+            log('Loaded ' + data.messages.length + ' messages', 'info');
+
+            // Mark as read
+            fetch(API_BASE + '/api/messages/conversations/' + conversationId + '/read', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + currentUser.token,
+                    'Accept': 'application/json'
+                }
+            });
+        }
+    } catch (err) {
+        log('Error loading messages: ' + err.message, 'error');
+    }
+}
+
+function addMessage(data, type) {
+    const list = document.getElementById('messagesList');
+    const msg = document.createElement('div');
+    msg.className = 'message ' + type;
+    msg.innerHTML = `
+        <div>${data.content}</div>
+        <div class="message-time">${data.created_at || 'now'}</div>
+    `;
+    list.appendChild(msg);
+    list.scrollTop = list.scrollHeight;
+}
+
+async function sendMessage() {
+    const input = document.getElementById('messageText');
+    const content = input.value.trim();
+    if (!content) return;
+
+    log('📤 Sending: ' + content, 'sent');
+
+    try {
+        // Get other user ID from conversation
+        const otherUserId = prompt('Enter receiver User ID:');
+        if (!otherUserId) return;
+
+        const res = await fetch(API_BASE + '/api/messages/send', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + currentUser.token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                receiver_id: parseInt(otherUserId),
+                content: content,
+                type: 'text'
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            log('✅ Message sent! ID: ' + data.message.id, 'sent');
+            addMessage(data.message, 'sent');
+            input.value = '';
+
+            // Update conversation ID if new
+            if (!currentConversationId) {
+                currentConversationId = data.message.conversation_id;
+                openConversation(data.message.conversation_id);
+            }
+        } else {
+            log('❌ Send failed: ' + JSON.stringify(data.error), 'error');
+            alert(data.error?.message || 'Failed to send');
+        }
+    } catch (err) {
+        log('❌ Error: ' + err.message, 'error');
+    }
+}
+
+function disconnect() {
+    if (activePusher) {
+        activePusher.disconnect();
+    }
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('chatScreen').style.display = 'none';
+    log('Disconnected', 'info');
+}
+</script>
+
+</body>
+</html>
