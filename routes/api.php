@@ -36,9 +36,9 @@ Route::group([], function () {
     });
 
     // Test chat routes (no auth for testing)
-    Route::post('test/conversations', [ConversationController::class, 'store']);
-    Route::post('test/messages', [MessageController::class, 'store']);
-    Route::get('test/conversations/{id}/messages', [MessageController::class, 'index']);
+    Route::post('conversations', [ConversationController::class, 'store']);
+    Route::post('messages', [MessageController::class, 'store']);
+    Route::get('conversations/{id}/messages', [MessageController::class, 'index']);
 });
 
 // Protected routes (require authentication)
