@@ -8,17 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
-            $table->text('text');
-            $table->enum('status', ['sent', 'delivered', 'read'])->default('sent');
-            $table->timestamps();
+        if (! Schema::hasTable('messages')) {
+            Schema::create('messages', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('conversation_id')->constrained()->cascadeOnDelete();
+                $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
+                $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
+                $table->text('text');
+                $table->enum('status', ['sent', 'delivered', 'read'])->default('sent');
+                $table->timestamps();
 
-            $table->index(['conversation_id', 'created_at']);
-        });
+                $table->index(['conversation_id', 'created_at']);
+            });
+        }
     }
 
     public function down(): void
