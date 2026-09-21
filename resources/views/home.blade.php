@@ -47,7 +47,7 @@
             --sp-card: #f8f2e4;
             --sp-parchment: #eee3cd;
             --sp-maroon: #7c2a2a;
-            --sp-maroon-dark: #5e1f1f;
+            --sp-maroon-dark: #003366;
             --sp-line: #d9c9a8;
             --sp-muted: #333;
             --font-serif: 'Noto Serif Devanagari', serif;

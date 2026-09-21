@@ -18,7 +18,7 @@
   --sp-parchment: #ffffff;
   --sp-card: #ffffff;
   --sp-maroon: #7c2a2a;
-  --sp-maroon-dark: #5e1f1f;
+  --sp-maroon-dark: #003366;
   --sp-marigold: #c6862e;
   --sp-forest: #33503d;
   --sp-line: #d9c9a8;
@@ -277,7 +277,7 @@ h1, h2, h3, h4, h5, h6 {
 .shop-box-items .shop-content .price-list1 li {
   font-size: 14px !important;
   font-weight: 700 !important;
-  color: var(--sp-maroon) !important;
+  color: #003366 !important;
   line-height: 1.6 !important;
 }
 
@@ -298,7 +298,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .shop-box-items .shop-button .theme-btn {
   width: 100% !important;
-  background: var(--sp-maroon) !important;
+  background: #003366 !important;
   color: #fff !important;
   border-radius: 100px !important;
   padding: 10px 16px !important;
@@ -312,7 +312,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .shop-box-items .shop-button .theme-btn:hover {
-  background: var(--sp-maroon-dark) !important;
+  background: #002244 !important;
   transform: none !important;
 }
 

@@ -26,13 +26,11 @@ class HomeController extends Controller
         $highlights = News::where('is_highlight', true)
             ->where('status', 'published')
             ->orderBy('publish_date', 'desc')
-            ->take(6)
             ->get();
 
         // Popular books: products with is_popular flag
         $popularBooks = Product::where('is_popular', true)
             ->orderBy('name')
-            ->take(12)
             ->get();
 
         $metaTitle = 'Speech Publications - Books, News & More';
@@ -50,6 +48,8 @@ class HomeController extends Controller
         $featured = News::with(['author', 'category'])
             ->published()
             ->featured()
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->whereHas('author', fn($q) => $q->where('status', 'active'))
             ->whereHas('category', fn($q) => $q->where('status', 'active'))
             ->latest('publish_date')
@@ -57,6 +57,8 @@ class HomeController extends Controller
 
         $news = News::with(['author', 'category'])
             ->published()
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->whereHas('author', fn($q) => $q->where('status', 'active'))
             ->whereHas('category', fn($q) => $q->where('status', 'active'))
             ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
@@ -66,6 +68,8 @@ class HomeController extends Controller
             ->get();
 
         $total = News::published()
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->whereHas('author', fn($q) => $q->where('status', 'active'))
             ->whereHas('category', fn($q) => $q->where('status', 'active'))
             ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
@@ -77,8 +81,8 @@ class HomeController extends Controller
             ->orderBy('name')
             ->get();
 
-        $recentPosts = News::published()->orderBy('publish_date', 'desc')->take(4)->get();
-        $trendingPosts = News::published()->orderBy('view_count', 'desc')->orderBy('publish_date', 'desc')->take(4)->get();
+        $recentPosts = News::published()->where('slug', '!=', '')->whereNotNull('slug')->orderBy('publish_date', 'desc')->take(4)->get();
+        $trendingPosts = News::published()->where('slug', '!=', '')->whereNotNull('slug')->orderBy('view_count', 'desc')->orderBy('publish_date', 'desc')->take(4)->get();
 
         $metaTitle = 'News - Speech Publications';
         $metaDescription = 'Stay updated with the latest news and articles from Speech Publications.';

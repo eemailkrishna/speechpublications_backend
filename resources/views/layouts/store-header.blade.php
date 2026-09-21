@@ -159,26 +159,30 @@
                     <div class="mean__menu-wrapper">
                         <div class="main-menu">
                             <nav id="mobile-menu">
+                                @php
+                                    $p = request()->path();
+                                    $isHome = ($p == '' || $p == '/' || $p == 'speech-publication/' || $p == 'speech-publication');
+                                    @endphp
                                 <ul>
                                     <li>
-                                        <a class="text-white" href="{{url('/')}}">
+                                        <a class="text-white {{ $isHome ? 'active' : '' }}" href="{{url('/')}}">
                                             Home
                                         </a>
 
                                     </li>
 
                                     <li>
-                                        <a class="text-white " href="{{url('/store')}}">Store</a>
+                                        <a class="text-white {{ str_contains($p, 'store') || str_contains($p, 'book-details') || str_contains($p, 'cart') || str_contains($p, 'checkout') || str_contains($p, 'order-confirmation') ? 'active' : '' }}" href="{{url('/store')}}">Store</a>
                                     </li>
                                        <li>
-                                        <a class="text-white" href="{{url('/news')}}">News</a>
+                                        <a class="text-white {{ str_contains($p, 'news') ? 'active' : '' }}" href="{{url('/news')}}">News</a>
                                     </li>
                                     <li>
-                                        <a class="text-white" href="{{url('/about')}}">About</a>
+                                        <a class="text-white {{ str_contains($p, 'about') ? 'active' : '' }}" href="{{url('/about')}}">About</a>
                                     </li>
                                    
                                     <li>
-                                        <a class="text-white" href="{{url('/contact-us')}}">Contact</a>
+                                        <a class="text-white {{ str_contains($p, 'contact') ? 'active' : '' }}" href="{{url('/contact-us')}}">Contact</a>
                                     </li>
 
 
@@ -209,6 +213,13 @@
     @yield('content')
 
     <!-- Scripts -->
+    <style>
+        .main-menu nav ul li a.active {
+            background: rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 6px 14px;
+        }
+    </style>
     <script src="{{asset('store/assets/js/jquery-3.7.1.min.js')}}"></script>
     <script src="{{asset('store/assets/js/bootstrap.bundle.min.js')}}"></script>
 

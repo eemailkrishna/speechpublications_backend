@@ -185,7 +185,7 @@
                                       <div class="shop-box-items">
                                           <div class="book-thumb center" style="position:relative;">
                                              <a href="{{ url('/book-details/'.$product->slug) }}">
-                                                 <img src="{{ $imageUrl }}" alt="{{ $product->name }}">
+                                                 <img style="padding-top: 15px;" src="{{ $imageUrl }}" alt="{{ $product->name }}">
                                              </a>
 
                                              @if($product->category)
