@@ -19,7 +19,7 @@
       "item": {
         "@@type": "NewsArticle",
         "headline": "{{ addslashes($item->title) }}",
-        "url": "{{ url('/news/'.$item->slug) }}",
+        "url": "{{ url('/news/'.@$item->slug) }}",
         "image": "{{ $item->featured_image ?? asset('images/logo.png') }}",
         "datePublished": "{{ $item->publish_date ? $item->publish_date->toIso8601String() : now()->toIso8601String() }}",
         "author": {

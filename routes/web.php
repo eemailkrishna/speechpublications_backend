@@ -222,8 +222,8 @@ Route::get('/sitemap.xml', function () {
         ->chunk(100, function ($news) use (&$urls, $baseUrl) {
             foreach ($news as $item) {
                 $urls[] = [
-                    'loc' => $baseUrl . '/news/' . $item->slug,
-                    'lastmod' => ($item->updated_at ?? $item->publish_date)->toIso8601String(),
+                    'loc' => $baseUrl . '/news/' . @$item->slug,
+                    'lastmod' => (@$item->updated_at ?? @$item->publish_date)->toIso8601String(),
                     'priority' => '0.7',
                     'changefreq' => 'weekly',
                 ];

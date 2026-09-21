@@ -235,8 +235,8 @@
                                 </div>
                             </div>
                             <div class="col-lg-4 col-12 mt-3 mt-lg-0 text-lg-end">
-                                <div class="social-share">
-                                    <span class="me-3">Share:</span>
+                                <div class="social-share" style="display: flex; align-items: center; gap: 16px;">
+                                    <span>Share:</span>
                                     <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ urlencode(url()->current()) }}"><i class="fab fa-facebook-f"></i></a>
                                     <a target="_blank" href="https://x.com/intent/tweet?url={{ urlencode(url()->current()) }}&text={{ urlencode($news->title) }}"><i class="fab fa-twitter"></i></a>
                                     <a target="_blank" href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(url()->current()) }}"><i class="fab fa-linkedin-in"></i></a>
@@ -257,18 +257,17 @@
                                 <h3 style="font-family: var(--font-serif); color: var(--sp-ink);">{{ $comments->total() }} Comments</h3>
                             </div>
                             @forelse($comments as $comment)
-                            <div class="blog-single-comment d-flex gap-4 pt-4 pb-5">
+                            <div class="blog-single-comment d-flex gap-3 pt-3 pb-3" style="border-bottom: 1px solid var(--sp-line);">
                                 <div class="image">
-                                    <img src="{{ asset('store/assets/img/news/comment.png') }}" alt="image">
+                                    @php $initial = strtoupper(substr($comment->name, 0, 1)); @endphp
+                                    <div style="width:36px;height:36px;border-radius:50%;background:var(--sp-maroon);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:var(--font-ui);flex-shrink:0;">{{ $initial }}</div>
                                 </div>
                                 <div class="content">
-                                    <div class="head d-flex flex-wrap gap-2 align-items-center justify-content-between">
-                                        <div class="con">
-                                            <h5>{{ $comment->name }}</h5>
-                                            <span>{{ $comment->created_at->format('F d, Y \a\t g:i a') }}</span>
-                                        </div>
+                                    <div class="d-flex flex-wrap gap-2 align-items-center">
+                                        <h5 style="font-size: 14px; margin: 0;">{{ $comment->name }}</h5>
+                                        <span style="font-size: 12px; color: var(--sp-muted);">{{ $comment->created_at->format('F d, Y \a\t g:i a') }}</span>
                                     </div>
-                                    <p class="mt-30 mb-4">{{ $comment->comment }}</p>
+                                    <p style="font-size: 13px; color: var(--sp-ink); margin-top: 6px; margin-bottom: 0; line-height: 1.6;">{{ $comment->comment }}</p>
                                 </div>
                             </div>
                             @empty
@@ -280,48 +279,50 @@
                         </div>
 
                         <div class="comment-form-wrap pt-5">
-                            <h3>Leave a comment</h3>
-                            @if(session('success'))
-                            <div class="alert alert-success" style="border-radius: 8px; font-size: 14px;">{{ session('success') }}</div>
-                            @endif
-                            @if($errors->any())
-                            <div class="alert alert-danger" style="border-radius: 8px; font-size: 14px;">
-                                <ul class="mb-0">
-                                    @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
-                            <form action="{{ route('news.comment') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="news_id" value="{{ $news->id }}">
-                                <div class="row g-4">
-                                    <div class="col-lg-6">
-                                        <div class="form-clt">
-                                            <span>Your Name*</span>
-                                            <input type="text" name="name" id="name" placeholder="Your Name" value="{{ old('name', auth()->user()->name ?? '') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="form-clt">
-                                            <span>Your Email*</span>
-                                            <input type="email" name="email" id="email1" placeholder="Your Email" value="{{ old('email', auth()->user()->email ?? '') }}" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-clt">
-                                            <span>Message*</span>
-                                            <textarea name="comment" id="message" placeholder="Write your comment..." required>{{ old('comment') }}</textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <button type="submit" class="theme-btn">
-                                            Post Comment <i class="fa-solid fa-arrow-right-long"></i>
-                                        </button>
-                                    </div>
+                            <div style="background: var(--sp-card); border: 1px solid var(--sp-line); border-radius: 12px; padding: 32px;">
+                                <h3 style="font-family: var(--font-serif); color: var(--sp-ink); margin-bottom: 24px;">Leave A Comment</h3>
+                                @if(session('success'))
+                                <div class="alert alert-success" style="border-radius: 8px; font-size: 14px;">{{ session('success') }}</div>
+                                @endif
+                                @if($errors->any())
+                                <div class="alert alert-danger" style="border-radius: 8px; font-size: 14px;">
+                                    <ul class="mb-0">
+                                        @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
-                            </form>
+                                @endif
+                                <form action="{{ route('news.comment') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="news_id" value="{{ $news->id }}">
+                                    <div class="row g-4">
+                                        <div class="col-lg-6">
+                                            <div class="form-clt">
+                                                <span style="font-weight: 600; font-size: 14px; color: var(--sp-ink); margin-bottom: 8px; display: block;">Your Name*</span>
+                                                <input type="text" name="name" id="name" placeholder="Your Name" value="{{ old('name', auth()->user()->name ?? '') }}" required style="width: 100%; padding: 14px 16px; border: 1px solid var(--sp-line); border-radius: 8px; font-size: 14px; font-family: var(--font-ui); background: #fff;">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-clt">
+                                                <span style="font-weight: 600; font-size: 14px; color: var(--sp-ink); margin-bottom: 8px; display: block;">Your Email*</span>
+                                                <input type="email" name="email" id="email1" placeholder="Your Email" value="{{ old('email', auth()->user()->email ?? '') }}" required style="width: 100%; padding: 14px 16px; border: 1px solid var(--sp-line); border-radius: 8px; font-size: 14px; font-family: var(--font-ui); background: #fff;">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="form-clt">
+                                                <span style="font-weight: 600; font-size: 14px; color: var(--sp-ink); margin-bottom: 8px; display: block;">Message*</span>
+                                                <textarea name="comment" id="message" placeholder="Write your comment..." required style="width: 100%; padding: 14px 16px; border: 1px solid var(--sp-line); border-radius: 8px; font-size: 14px; font-family: var(--font-ui); background: #fff; min-height: 180px; resize: vertical;">{{ old('comment') }}</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <button type="submit" class="theme-btn" style="border-radius: 100px;">
+                                                Post Comment <i class="fa-solid fa-arrow-right-long"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

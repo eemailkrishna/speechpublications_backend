@@ -41,6 +41,13 @@
     <!-- JS -->
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery-migrate.min.js"></script>
+    <style>
+        #menu-main-menu li a.active {
+            background: rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 6px 14px;
+        }
+    </style>
 
     <!-- JSON-LD Structured Data (Blade Safe) -->
     @verbatim
@@ -97,26 +104,30 @@
                 </div>
                 <div class="menu_box">
                     <nav>
+                        @php
+                            $p = request()->path();
+                            $isHome = ($p == '' || $p == '/' || $p == 'speech-publication/' || $p == 'speech-publication');
+                        @endphp
                         <div class="menu-main-menu-container">
                             <ul id="menu-main-menu" class="menu">
                                 <li id="menu-item-20"
                                     class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20"><a
-                                        href="{{url('/')}}">Home</a></li>
+                                        class="{{ $isHome ? 'active' : '' }}" href="{{url('/')}}">Home</a></li>
                                          <li id="menu-item-20"
                                     class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20"><a
-                                        href="{{url('/store')}}">Store</a></li>
+                                        class="{{ str_contains($p, 'store') || str_contains($p, 'book-details') || str_contains($p, 'cart') || str_contains($p, 'checkout') || str_contains($p, 'order-confirmation') ? 'active' : '' }}" href="{{url('/store')}}">Store</a></li>
                                           <li id="menu-item-21"
                                     class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21"><a
-                                        href="{{url('/news')}}">News</a></li>
+                                        class="{{ str_contains($p, 'news') ? 'active' : '' }}" href="{{url('/news')}}">News</a></li>
                                 <li id="menu-item-21"
                                     class="menu-item menu-item-type-post_type menu-item-object-page menu-item-21"><a
-                                        href="{{url('/about')}}">About Us</a></li>
+                                        class="{{ str_contains($p, 'about') ? 'active' : '' }}" href="{{url('/about')}}">About Us</a></li>
                                 
                                
                                 
                                 <li id="menu-item-23"
                                     class="menu-item menu-item-type-post_type menu-item-object-page menu-item-23"><a
-                                        href="{{url('/contact-us')}}">Contact Us</a></li>
+                                        class="{{ str_contains($p, 'contact') ? 'active' : '' }}" href="{{url('/contact-us')}}">Contact Us</a></li>
                                         
                             </ul>
                         </div>
