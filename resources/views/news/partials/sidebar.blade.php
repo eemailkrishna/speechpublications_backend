@@ -16,7 +16,7 @@
             <h3>Categories</h3>
         </div>
         <div class="news-widget-categories">
-            <ul>
+            <ul style="margin-right: 100px;">
                 @forelse($categories as $category)
                 <li class="{{ ($categoryId ?? '') == $category->id ? 'active' : '' }}">
                     <a href="{{ route('news.category', $category->slug) }}">{{ $category->name }}</a>

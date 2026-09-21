@@ -1,6 +1,12 @@
 <!-- Footer Section start  -->
 @php
-$categories = App\Models\ProductCategory::all();
+$p = request()->path();
+$isNews = str_contains($p, 'news');
+if ($isNews) {
+    $newsCategories = App\Models\NewsCategory::active()->orderBy('name')->get();
+} else {
+    $categories = App\Models\ProductCategory::all();
+}
 @endphp
 
 
@@ -30,25 +36,30 @@ $categories = App\Models\ProductCategory::all();
                 <div class="col-xl-2 col-lg-4 col-md-4 ps-lg-5 wow fadeInUp" data-wow-delay=".4s">
                     <div class="single-footer-widget">
                         <div class="widget-head">
-                            <h3>Category</h3>
+                            <h3>{{ $isNews ? 'Categories' : 'Category' }}</h3>
                         </div>
                         <ul class="list-items">
-
-                        
-
-                        @foreach($categories as $category)
-                     
-<li>
-
-<a href="{{ route('store.index', ['category' => $category->id]) }}">
-    {{ $category->name }}
-</a>
-</li>
-@endforeach
-                           
+                            @if($isNews)
+                                @foreach($newsCategories as $category)
+                                <li>
+                                    <a href="{{ route('news.category', $category->slug) }}">
+                                        {{ $category->name }}
+                                    </a>
+                                </li>
+                                @endforeach
+                            @else
+                                @foreach($categories as $category)
+                                <li>
+                                    <a href="{{ route('store.index', ['category' => $category->id]) }}">
+                                        {{ $category->name }}
+                                    </a>
+                                </li>
+                                @endforeach
+                            @endif
                         </ul>
                     </div>
                 </div>
+                @if(!$isNews)
                 <div class="col-xl-3 col-lg-4 col-md-4 ps-lg-5 wow fadeInUp" data-wow-delay=".6s">
                     <div class="single-footer-widget">
                         <div class="widget-head">
@@ -88,7 +99,8 @@ $categories = App\Models\ProductCategory::all();
                         </ul>
                     </div>
                 </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 wow fadeInUp" data-wow-delay=".8s">
+                @endif
+                <div class="{{ $isNews ? 'col-xl-5 col-lg-4 col-md-6' : 'col-xl-3 col-lg-4 col-md-6' }} wow fadeInUp" data-wow-delay=".8s">
                     <div class="single-footer-widget">
                         <div class="widget-head">
                             <h3>Explore</h3>

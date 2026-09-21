@@ -52,6 +52,8 @@ class NewsFrontController extends Controller
         $articles = News::with(['author', 'category'])
             ->published()
             ->where('author_id', $author->id)
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->orderBy('publish_date', 'desc')
             ->paginate(9);
 
@@ -82,6 +84,8 @@ class NewsFrontController extends Controller
         $news = News::with(['author', 'category'])
             ->published()
             ->where('category_id', $category->id)
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->orderBy('publish_date', 'desc')
             ->paginate(9);
 
@@ -120,6 +124,8 @@ class NewsFrontController extends Controller
 
         $news = News::with(['author', 'category'])
             ->published()
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
             ->when($search, fn($q) => $q->search($search))
             ->orderBy('publish_date', 'desc')
@@ -184,6 +190,8 @@ class NewsFrontController extends Controller
         $related = News::with(['author', 'category'])
             ->published()
             ->where('id', '!=', $news->id)
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->when($news->category_id, fn($q) => $q->where('category_id', $news->category_id))
             ->orderBy('publish_date', 'desc')
             ->take(3)
@@ -193,6 +201,8 @@ class NewsFrontController extends Controller
             $related = News::with(['author', 'category'])
                 ->published()
                 ->where('id', '!=', $news->id)
+                ->where('slug', '!=', '')
+                ->whereNotNull('slug')
                 ->orderBy('publish_date', 'desc')
                 ->take(3)
                 ->get();
@@ -213,6 +223,8 @@ class NewsFrontController extends Controller
     {
         return News::with(['author', 'category'])
             ->published()
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->orderBy('publish_date', 'desc')
             ->take(4)
             ->get();
@@ -222,6 +234,8 @@ class NewsFrontController extends Controller
     {
         return News::with(['author', 'category'])
             ->published()
+            ->where('slug', '!=', '')
+            ->whereNotNull('slug')
             ->orderBy('view_count', 'desc')
             ->orderBy('publish_date', 'desc')
             ->take(4)
