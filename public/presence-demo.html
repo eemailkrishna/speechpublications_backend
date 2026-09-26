@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presence Demo</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: monospace; background: #1a1a2e; color: #e0e0e0; padding: 20px; }
+        .box { background: #16213e; border: 1px solid #0f3460; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+        h2 { color: #e94560; margin-bottom: 12px; }
+        label { color: #aaa; font-size: 12px; }
+        select, button { padding: 10px; border: none; border-radius: 4px; font-size: 14px; width: 100%; margin-top: 4px; margin-bottom: 8px; }
+        select { background: #0f3460; color: white; }
+        .btn-go { background: #e94560; color: white; font-weight: bold; cursor: pointer; }
+        .btn-stop { background: #555; color: white; cursor: pointer; }
+        #status { font-size: 20px; font-weight: bold; }
+        .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+        .dot.off { background: #555; }
+        .dot.on { background: #00ff88; }
+        .dot.wait { background: #ffaa00; }
+        #members { font-size: 13px; }
+        #members div { padding: 4px 0; border-bottom: 1px solid #0f3460; }
+        #log { background: #0a0a1a; border: 1px solid #333; border-radius: 4px; padding: 10px; max-height: 300px; overflow-y: auto; font-size: 11px; line-height: 1.8; white-space: pre-wrap; word-break: break-all; }
+        .ok { color: #00ff88; }
+        .er { color: #ff4444; }
+        .wr { color: #ffaa00; }
+        .ev { color: #4488ff; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Presence Demo</h2>
+    <label>Select User</label>
+    <select id="sel">
+        <option value="1">User 1 - Krishna</option>
+        <option value="2">User 2</option>
+        <option value="3">User 3</option>
+        <option value="4">User 4</option>
+        <option value="5">User 5</option>
+    </select>
+    <button class="btn-go" id="goBtn" onclick="go()">GO</button>
+    <button class="btn-stop" id="stopBtn" onclick="stop()" style="display:none">STOP</button>
+</div>
+
+<div class="box">
+    <div id="status"><span class="dot off"></span> Offline</div>
+</div>
+
+<div class="box">
+    <label>ONLINE (<span id="cnt">0</span>)</label>
+    <div id="members"></div>
+</div>
+
+<div id="log"></div>
+
+<script>
+var pusher = null;
+var chan = null;
+var mems = {};
+var BASE = window.location.origin + '/speech-publication';
+
+function L(msg, cls) {
+    var el = document.getElementById('log');
+    var t = new Date().toLocaleTimeString();
+    el.innerHTML += '<span class="' + (cls||'') + '">[' + t + '] ' + msg + '</span>\n';
+    el.scrollTop = el.scrollHeight;
+}
+
+function S(on, txt) {
+    document.getElementById('status').innerHTML = '<span class="dot ' + (on ? 'on' : on === null ? 'wait' : 'off') + '"></span> ' + txt;
+}
+
+function updMembers() {
+    var ids = Object.keys(mems);
+    document.getElementById('cnt').textContent = ids.length;
+    document.getElementById('members').innerHTML = ids.map(function(id) {
+        return '<div>' + id + ' - ' + (mems[id].name || '?') + '</div>';
+    }).join('') || '<div style="color:#555">empty</div>';
+}
+
+function go() {
+    var uid = document.getElementById('sel').value;
+    document.getElementById('goBtn').disabled = true;
+    L('Step 1: Checking Pusher lib...', 'ev');
+
+    if (typeof Pusher === 'undefined') {
+        L('Pusher.js NOT loaded! Check internet.', 'er');
+        document.getElementById('goBtn').disabled = false;
+        return;
+    }
+    L('Pusher.js loaded OK', 'ok');
+
+    L('Step 2: Fetching token for User ' + uid, 'ev');
+    S(null, 'Getting token...');
+
+    fetch(BASE + '/api/test/token/' + uid)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            L('Token: ' + data.token.substring(0, 40) + '...', 'ok');
+            L('Step 3: Creating Pusher...', 'ev');
+            S(null, 'Connecting...');
+
+            pusher = new Pusher('43e9e4dad16b21729655', {
+                cluster: 'ap2',
+                authEndpoint: BASE + '/api/broadcasting/auth',
+                auth: {
+                    headers: {
+                        'Authorization': 'Bearer ' + data.token
+                    }
+                },
+                enabledTransports: ['ws', 'wss'],
+                forceTLS: true,
+            });
+
+            pusher.connection.bind('state_change', function(s) {
+                L('State: ' + s.previous + ' -> ' + s.current, 'ev');
+            });
+
+            pusher.connection.bind('connected', function() {
+                L('Step 4: WS Connected! ID=' + pusher.connection.socket_id, 'ok');
+                L('Step 5: Subscribe presence-online', 'ev');
+                chan = pusher.subscribe('presence-online');
+            });
+
+            pusher.connection.bind('disconnected', function() {
+                L('WS Disconnected', 'wr');
+                S(false, 'Offline');
+                showGo();
+            });
+
+            pusher.connection.bind('error', function(e) {
+                L('WS ERROR: ' + JSON.stringify(e), 'er');
+            });
+
+            pusher.bind('pusher:subscription_succeeded', function(d) {
+                L('SUBSCRIBED! Count=' + d.presence.count, 'ok');
+                S(true, 'Online');
+                document.getElementById('stopBtn').style.display = 'block';
+                document.getElementById('goBtn').style.display = 'none';
+                for (var id in d.presence.hash) {
+                    mems[id] = d.presence.hash[id];
+                    L('Member: ' + id + '=' + d.presence.hash[id].name, 'ok');
+                }
+                updMembers();
+            });
+
+            pusher.bind('pusher:member_added', function(m) {
+                L('JOINED: ' + m.id + '=' + m.info.name, 'ok');
+                mems[m.id] = m.info;
+                updMembers();
+            });
+
+            pusher.bind('pusher:member_removed', function(m) {
+                L('LEFT: ' + m.id, 'wr');
+                delete mems[m.id];
+                updMembers();
+            });
+
+            pusher.bind('pusher:subscription_error', function(e) {
+                L('SUB ERROR: ' + JSON.stringify(e), 'er');
+                S(false, 'Auth Failed');
+                showGo();
+            });
+        })
+        .catch(function(err) {
+            L('FETCH ERROR: ' + err.message, 'er');
+            showGo();
+        });
+}
+
+function stop() {
+    if (pusher) { pusher.disconnect(); pusher = null; }
+    mems = {}; updMembers();
+    S(false, 'Offline');
+    showGo();
+    L('Stopped', 'wr');
+}
+
+function showGo() {
+    document.getElementById('goBtn').style.display = 'block';
+    document.getElementById('goBtn').disabled = false;
+    document.getElementById('stopBtn').style.display = 'none';
+}
+</script>
+</body>
+</html>

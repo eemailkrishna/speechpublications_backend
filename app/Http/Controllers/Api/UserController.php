@@ -102,6 +102,21 @@ class UserController extends Controller
     }
     
     public function getChatUsers(Request $request){
-        return 'dd';
+        try {
+            $userId = auth('api')->id();
+            $users = \App\Models\User::where('id', '!=', $userId)
+                ->select('id', 'name', 'profile_photo')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $users,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => ['code' => 'SERVER_ERROR', 'message' => $e->getMessage()]
+            ], 500);
+        }
     }
 }
