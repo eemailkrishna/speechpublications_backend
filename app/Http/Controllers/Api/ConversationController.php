@@ -11,7 +11,7 @@ class ConversationController extends Controller
     public function index(Request $request)
     {
         try {
-            $userId = $request->input('sender_id', 1);
+            $userId = auth('api')->id();
 
             $conversations = Conversation::where('user_one_id', $userId)
                 ->orWhere('user_two_id', $userId)

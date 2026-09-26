@@ -1,0 +1,621 @@
+{
+  "info": {
+    "name": "Speech Publication - Chat API",
+    "description": "Chat API collection generated from CHAT_API_DOCS.md\n\nBase URL: http://localhost/speech-publication/api\nAuth: Authorization: Bearer <token>",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "Get Test Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var jsonData = pm.response.json();",
+                  "  pm.environment.set('access_token', jsonData.token);",
+                  "  if (jsonData.user && jsonData.user.id) {",
+                  "    pm.environment.set('sender_id', String(jsonData.user.id));",
+                  "  }",
+                  "  console.log('Token saved for user:', jsonData.user && jsonData.user.name);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/test/token/{{sender_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "test", "token", "{{sender_id}}"]
+            },
+            "description": "Testing only - returns a JWT for the given user ID. Saves token to access_token and sender_id."
+          }
+        },
+        {
+          "name": "Get All Users (login screen)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var jsonData = pm.response.json();",
+                  "  if (jsonData.data && jsonData.data.length > 1) {",
+                  "    pm.environment.set('receiver_id', String(jsonData.data[1].id));",
+                  "  }",
+                  "  if (jsonData.data && jsonData.data.length > 0) {",
+                  "    pm.environment.set('user_id', String(jsonData.data[0].id));",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "all"]
+            },
+            "description": "Public. Saves first user to user_id, second user to receiver_id."
+          }
+        },
+        {
+          "name": "Get Chat Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/get-chat-users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "get-chat-users"]
+            },
+            "description": "All users except self - sidebar list."
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Conversations",
+      "item": [
+        {
+          "name": "Get All Conversations",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var jsonData = pm.response.json();",
+                  "  if (jsonData.data && jsonData.data.length > 0) {",
+                  "    pm.environment.set('conversation_id', String(jsonData.data[0].id));",
+                  "    if (jsonData.data[0].user && jsonData.data[0].user.id) {",
+                  "      pm.environment.set('receiver_id', String(jsonData.data[0].user.id));",
+                  "    }",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/conversations?page=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "conversations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Paginated. Saves first conversation id to conversation_id."
+          }
+        },
+        {
+          "name": "Create Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{receiver_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conversations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "conversations"]
+            },
+            "description": "user_id = the other user. Auth user is the sender."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Messages",
+      "item": [
+        {
+          "name": "Send Message (Text)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var jsonData = pm.response.json();",
+                  "  if (jsonData.data && jsonData.data.conversation_id) {",
+                  "    pm.environment.set('conversation_id', String(jsonData.data.conversation_id));",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiver_id\": {{receiver_id}},\n  \"text\": \"hello\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/message/send",
+              "host": ["{{base_url}}"],
+              "path": ["api", "message", "send"]
+            },
+            "description": "Text max 5000 chars. Conversation auto-created if it doesn't exist. Saves conversation_id."
+          }
+        },
+        {
+          "name": "Send Message (Image)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var jsonData = pm.response.json();",
+                  "  if (jsonData.data && jsonData.data.conversation_id) {",
+                  "    pm.environment.set('conversation_id', String(jsonData.data.conversation_id));",
+                  "  }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "receiver_id",
+                  "value": "{{receiver_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "text",
+                  "value": "optional caption",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/message/send",
+              "host": ["{{base_url}}"],
+              "path": ["api", "message", "send"]
+            },
+            "description": "multipart/form-data. Image: 5MB max, jpg/png/gif/webp. Uploaded to S3 chat-images/ folder."
+          }
+        },
+        {
+          "name": "Get Messages Between Two Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/message/get?sender_id={{sender_id}}&receiver_id={{receiver_id}}&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "message", "get"],
+              "query": [
+                {
+                  "key": "sender_id",
+                  "value": "{{sender_id}}"
+                },
+                {
+                  "key": "receiver_id",
+                  "value": "{{receiver_id}}"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Returns messages sorted created_at DESC (latest first) - reverse for chat UI."
+          }
+        },
+        {
+          "name": "Mark Messages as Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conversation_id\": {{conversation_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/message/read-all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "message", "read-all"]
+            },
+            "description": "Call when chat screen is opened. Clears unread badge and broadcasts message.read."
+          }
+        },
+        {
+          "name": "Get Total Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/message/unread-count",
+              "host": ["{{base_url}}"],
+              "path": ["api", "message", "unread-count"]
+            },
+            "description": "Returns total_unread + by_conversation breakdown."
+          }
+        },
+        {
+          "name": "Get Unread Count by Sender",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/message/unread-by-sender",
+              "host": ["{{base_url}}"],
+              "path": ["api", "message", "unread-by-sender"]
+            },
+            "description": "Key = sender_id, Value = unread count. Poll every 3s for badge counts."
+          }
+        },
+        {
+          "name": "Mark Single Message as Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/messages/{{message_id}}/read",
+              "host": ["{{base_url}}"],
+              "path": ["api", "messages", "{{message_id}}", "read"]
+            },
+            "description": "Mark one message read (double tick)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3b. Legacy / Test Chat Routes (no auth)",
+      "description": "Test-only routes that accept sender_id in body instead of JWT.",
+      "item": [
+        {
+          "name": "Create Conversation (test mode)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sender_id\": {{sender_id}},\n  \"user_id\": {{receiver_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/conversations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "conversations"]
+            }
+          }
+        },
+        {
+          "name": "Send Message (test mode)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sender_id\": {{sender_id}},\n  \"receiver_id\": {{receiver_id}},\n  \"text\": \"hello\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/messages",
+              "host": ["{{base_url}}"],
+              "path": ["api", "messages"]
+            },
+            "description": "Requires sender_id since no JWT is sent."
+          }
+        },
+        {
+          "name": "Get Conversation Messages (test mode)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/conversations/{{conversation_id}}/messages",
+              "host": ["{{base_url}}"],
+              "path": ["api", "conversations", "{{conversation_id}}", "messages"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Online Status",
+      "item": [
+        {
+          "name": "Get All Online Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/online",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "online"]
+            },
+            "description": "Poll every 5s for green dot, or use Pusher presence channel."
+          }
+        },
+        {
+          "name": "Get Single User Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/{{receiver_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "{{receiver_id}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Get Multiple Users Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/online-status?ids=1,2,3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "online-status"],
+              "query": [
+                {
+                  "key": "ids",
+                  "value": "1,2,3",
+                  "description": "Comma-separated user IDs"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Broadcast Auth (Pusher)",
+      "item": [
+        {
+          "name": "Authenticate Channel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"channel_name\": \"presence-online\",\n  \"socket_id\": \"12345.67890\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/broadcasting/auth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "broadcasting", "auth"]
+            },
+            "description": "Required for presence-online and conversation.{id} channels.\n\nPusher Key: 43e9e4dad16b21729655\nCluster: ap2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. User Profile",
+      "item": [
+        {
+          "name": "Get Own Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/{{receiver_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "{{receiver_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost/speech-publication"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "sender_id",
+      "value": "42",
+      "description": "Current/authenticated user ID"
+    },
+    {
+      "key": "receiver_id",
+      "value": "43",
+      "description": "Other user ID"
+    },
+    {
+      "key": "conversation_id",
+      "value": ""
+    },
+    {
+      "key": "message_id",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": ""
+    }
+  ]
+}
