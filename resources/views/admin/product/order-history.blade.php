@@ -28,6 +28,45 @@
         ])
         <!-- end page title -->
 
+        @if($orders->isNotEmpty())
+        @php $firstOrder = $orders->first(); @endphp
+        <div class="row mb-3">
+            <div class="col-lg-12">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0 text-white">Customer Delivery Details @if(request('order')) (User ID: {{ request('order') }}) @endif</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Name:</strong> {{ trim(($firstOrder->first_name ?? '').' '.($firstOrder->last_name ?? '')) ?: '-' }}<br>
+                                <strong>Email:</strong> {{ $firstOrder->email ?? '-' }}<br>
+                                <strong>Delivery Mobile:</strong>
+                                @if($firstOrder->phone)
+                                    <a href="tel:{{ $firstOrder->phone }}">{{ $firstOrder->phone }}</a>
+                                @else
+                                    -
+                                @endif
+                            </div>
+                            <div class="col-md-5">
+                                <strong>Delivery Address:</strong><br>
+                                @if($firstOrder->company){{ $firstOrder->company }}<br>@endif
+                                {{ $firstOrder->address ?? '-' }}<br>
+                                {{ $firstOrder->city ?? '' }}@if($firstOrder->city && $firstOrder->country), @endif{{ $firstOrder->country ?? '' }}<br>
+                                @if($firstOrder->order_notes)<small class="text-muted">Note: {{ $firstOrder->order_notes }}</small>@endif
+                            </div>
+                            <div class="col-md-3">
+                                <strong>Total Orders:</strong> {{ $orders->count() }}<br>
+                                <strong>Total Amount:</strong> ₹{{ number_format($orders->sum('total'), 2) }}<br>
+                                <a href="{{ route('user.order.history') }}" class="btn btn-sm btn-secondary mt-2">← Back to Users</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
+
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
@@ -40,6 +79,9 @@
                                             cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
+                                                    <th data-column-id="order_id" class="gridjs-th" style="width: 100px;">
+                                                        <div class="gridjs-th-content">Order ID</div>
+                                                    </th>
                                                     <th data-column-id="name" class="gridjs-th" style="width: 150px;">
                                                         <div class="gridjs-th-content">Image</div>
                                                     </th>
@@ -60,6 +102,12 @@
                                                     </th>
                                                      <th data-column-id="email" class="gridjs-th" style="width: 250px;">
                                                         <div class="gridjs-th-content">Total Amount</div>
+                                                    </th>
+                                                    <th data-column-id="delivery_mobile" class="gridjs-th" style="width: 150px;">
+                                                        <div class="gridjs-th-content">Delivery Mobile</div>
+                                                    </th>
+                                                    <th data-column-id="delivery_address" class="gridjs-th" style="width: 280px;">
+                                                        <div class="gridjs-th-content">Delivery Address</div>
                                                     </th>
                                                       <th data-column-id="email" class="gridjs-th" style="width: 250px;">
                                                         <div class="gridjs-th-content">Order Date</div>
@@ -94,6 +142,9 @@
 
                                                 
                                                 <tr>
+                                                    {{-- Order ID --}}
+                                                    <td>#{{ @$order->id }}</td>
+
                                                     {{-- Product Image --}}
                                                     <td>
                                                         @if(!empty($images))
@@ -116,6 +167,24 @@
 
                                                     {{-- Total Amount --}}
                                                     <td>₹{{ number_format(@$item->subtotal, 2) }}</td>
+
+                                                    {{-- Delivery Mobile --}}
+                                                    <td>
+                                                        @if(@$order->phone)
+                                                            <a href="tel:{{ @$order->phone }}">{{ @$order->phone }}</a>
+                                                        @else
+                                                            -
+                                                        @endif
+                                                    </td>
+
+                                                    {{-- Delivery Address --}}
+                                                    <td style="white-space: normal; min-width: 250px;">
+                                                        <strong>{{ trim((@$order->first_name ?? '').' '.(@$order->last_name ?? '')) }}</strong><br>
+                                                        @if(@$order->company){{ @$order->company }}<br>@endif
+                                                        {{ @$order->address ?? '-' }}<br>
+                                                        {{ @$order->city ?? '' }}@if(@$order->city && @$order->country), @endif{{ @$order->country ?? '' }}<br>
+                                                        @if(@$order->email)<small>Email: {{ @$order->email }}</small>@endif
+                                                    </td>
 
                                                     {{-- Status --}}
                                                     <td>{{ @$item->created_at->format('d M Y') }}</td>

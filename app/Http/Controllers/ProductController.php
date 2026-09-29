@@ -311,7 +311,12 @@ class ProductController extends Controller
        // Old code used User::role('user') which hid buyers that were
        // created without the 'user' role (e.g. normal /register flow
        // never assigned any role), so their orders were invisible in admin.
+       // Eager-load orders (latest first) so blade can show delivery
+       // address + delivery mobile from the latest order.
        $users = User::whereHas('orders')             // 👈 jinke orders hain
+        ->with(['orders' => function($q){
+            $q->latest()->limit(5);
+        }])
         ->withCount('orders')            // 👈 orders count (optional)
         ->latest()
         ->get();
