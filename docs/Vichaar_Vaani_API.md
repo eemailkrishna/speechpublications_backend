@@ -259,6 +259,20 @@ Response:
 }
 ```
 
+Media object (inside `post.media[]`):
+
+```json
+{
+  "type": "video",
+  "url": "https://.../media/6a9428...mp4",
+  "thumbnail": "https://.../media/thumbnails/6a9428...jpg"
+}
+```
+
+- `type`: `image` or `video`, detected by the backend on upload (never `mixed` per item).
+- `thumbnail`: filled for `video` items only (`null` when no poster was supplied and
+  ffmpeg is unavailable on the host); `null` for `image` items.
+
 Feed behaviour:
 - `for_you` — personalized ranking algorithm
 - `following` — chronological or ranked posts from followed users
@@ -278,10 +292,13 @@ Pagination: always include page and limit; expose cursor-based pagination later 
 
 Form data fields:
 - `content` (string)
-- `media_type`: `photo|video|camera|location`
-- `media[]`: file uploads (0..N)
+- `media[]`: file uploads (0..N) - images and videos
+- `thumbnails[]`: optional poster images aligned with `media[]` (used for video posts)
 - `location`: optional `lat,lng`
 - `visibility`: `public|private`
+
+> `media_type` is **no longer accepted from the client**. The backend detects the
+> type from each uploaded file (`image/*` or `video/*`) and stores it.
 
 Success response:
 
@@ -289,14 +306,19 @@ Success response:
 {
   "success": true,
   "message": "Post created successfully",
-  "post": { /* post object */ }
+  "post": { /* post object, media is an array of URLs */ }
 }
 ```
 
 Server-side notes:
-- Validate files: allowed types and max file size (`MAX_FILE_SIZE` env var).
-- For videos: generate thumbnail and store metadata.
-- Store media urls in `media_urls` JSON array on the `posts` table.
+- Validate files by detected mime type and max file size (`image <= 5 MB`, `video <= 20 MB`).
+- Type detection happens server side: `media_type` (post level) = `image|video|mixed`,
+  `media_types` (per file) = `image|video`.
+- Video thumbnail priority: poster uploaded by the app (`thumbnails[]`) -> frame
+  extracted with ffmpeg when installed -> `null`.
+- Store media in `media_urls`, types in `media_types` and posters in
+  `media_thumbnails` (all JSON columns on the `posts` table); thumbnails are
+  uploaded to `media/thumbnails/` on S3.
 
 **4.2 Toggle Like**
 

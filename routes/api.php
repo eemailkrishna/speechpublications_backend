@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\SearchController;
 use App\Http\Controllers\Api\StoryController;
+use App\Http\Controllers\Api\OnlineStatusController;
 
 // Public routes (no authentication)
 Route::group([], function () {
@@ -33,6 +34,12 @@ Route::group([], function () {
             'phone_number' => $user->phone_number,
         ], config('app.jwt_secret'), 'HS256');
         return response()->json(['token' => $token, 'user' => ['id' => $user->id, 'name' => $user->name]]);
+    });
+
+    // Public: List all users for login
+    Route::get('users/all', function () {
+        $users = \App\Models\User::select('id', 'name', 'profile_photo')->get();
+        return response()->json(['success' => true, 'data' => $users]);
     });
 
     // Test chat routes (no auth for testing)
@@ -94,11 +101,65 @@ Route::middleware(\App\Http\Middleware\JwtMiddleware::class)->group(function () 
     Route::post('messages', [MessageController::class, 'store']);
     Route::post('messages/{id}/read', [MessageController::class, 'markAsRead']);
 
-    // Broadcasting auth (for WebSocket channel subscriptions)
+    // Messages (understandable endpoints)
+    Route::post('message/send', [MessageController::class, 'sendMessage']);
+    Route::get('message/get', [MessageController::class, 'getMessages']);
+    Route::post('message/read-all', [MessageController::class, 'markAllAsRead']);
+    Route::get('message/unread-count', [MessageController::class, 'unreadCount']);
+    Route::get('message/unread-by-sender', [MessageController::class, 'unreadBySender']);
+
+    // Online Status (real-time via Pusher Presence Channels)
+    Route::get('user/{userId}/status', [OnlineStatusController::class, 'getStatus']);
+    Route::get('users/online-status', [OnlineStatusController::class, 'getMultipleStatus']);
+    Route::get('users/online', [OnlineStatusController::class, 'getOnlineUsers']);
+
+    // Broadcasting auth (for Pusher channel subscriptions including presence channels)
     Route::post('broadcasting/auth', function (Request $request) {
-        $user = auth('api')->user();
-        $request->setUserResolver(fn () => $user);
-        return \Illuminate\Support\Facades\Broadcast::auth($request);
+        try {
+            $user = auth('api')->user();
+            if (!$user) {
+                return response()->json(['error' => 'Unauthenticated'], 401);
+            }
+
+            $socketId = $request->input('socket_id');
+            $channelName = $request->input('channel_name');
+
+            if (!$socketId || !$channelName) {
+                return response()->json(['error' => 'socket_id and channel_name required'], 422);
+            }
+
+            $key = config('broadcasting.connections.pusher.key');
+            $secret = config('broadcasting.connections.pusher.secret');
+
+            if (str_starts_with($channelName, 'presence-')) {
+                $channelData = json_encode([
+                    'user_id' => (string) $user->id,
+                    'user_info' => [
+                        'name' => $user->name,
+                        'profile_photo' => $user->profile_photo ?? null,
+                    ],
+                ]);
+
+                $signature = hash_hmac('sha256', $socketId . ':' . $channelName . ':' . $channelData, $secret);
+
+                return response()->json([
+                    'auth' => $key . ':' . $signature,
+                    'channel_data' => $channelData,
+                ]);
+            }
+
+            $signature = hash_hmac('sha256', $socketId . ':' . $channelName, $secret);
+
+            return response()->json([
+                'auth' => $key . ':' . $signature,
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('broadcasting/auth error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Auth failed',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     });
 
 

@@ -116,34 +116,6 @@ class NewsFrontController extends Controller
         ));
     }
 
-    public function loadMore(Request $request)
-    {
-        $offset = (int) $request->get('offset', 9);
-        $categoryId = $request->get('category_id');
-        $search = $request->get('search');
-
-        $news = News::with(['author', 'category'])
-            ->published()
-            ->where('slug', '!=', '')
-            ->whereNotNull('slug')
-            ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
-            ->when($search, fn($q) => $q->search($search))
-            ->orderBy('publish_date', 'desc')
-            ->skip($offset)
-            ->take(9)
-            ->get();
-
-        $html = '';
-        foreach ($news as $item) {
-            $html .= view('news.partials.card', ['item' => $item])->render();
-        }
-
-        return response()->json([
-            'html' => $html,
-            'hasMore' => $news->count() === 9,
-        ]);
-    }
-
     public function comment(Request $request)
     {
         $request->validate([
@@ -236,7 +208,7 @@ class NewsFrontController extends Controller
             ->published()
             ->where('slug', '!=', '')
             ->whereNotNull('slug')
-            ->orderBy('view_count', 'desc')
+            ->orderByRaw('(view_count + admin_view) desc')
             ->orderBy('publish_date', 'desc')
             ->take(4)
             ->get();

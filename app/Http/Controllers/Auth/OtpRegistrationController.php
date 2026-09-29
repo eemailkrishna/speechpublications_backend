@@ -154,8 +154,6 @@ class OtpRegistrationController extends Controller
      */
     public function completeProfile(Request $request)
     {
-        $roleId = Role::where('name', 'user')->first();
-          
         $validated = $request->validate([
             'temp_token' => 'required|string',
             'name' => 'required|string|min:2|max:50',
@@ -214,13 +212,17 @@ class OtpRegistrationController extends Controller
 
        
             Otp::where('email', $email)->update(['is_verified' => true]);
-            
-            
-            \DB::table('model_has_roles')->insert([
-                'role_id' => $roleId->id,
-                'model_type' => 'App\Models\User',
-                'model_id' => $user->id,
-            ]);
+
+            // Assign default 'user' role via Spatie API (null-safe).
+            // Old code did a raw DB insert with $roleId fetched before
+            // validation — if the 'user' role was missing it fatal-errored
+            // with "attempt to read property id on null" and left the
+            // account role-less (invisible in admin order list).
+            try {
+                $user->assignRole('user');
+            } catch (\Exception $e) {
+                \Log::warning('Role assignment failed for user ' . $user->id . ': ' . $e->getMessage());
+            }
 
             // Clear temp token
             Cache::forget("temp_token:{$validated['temp_token']}");

@@ -125,16 +125,33 @@ class OtpAuthController extends Controller
         $user = User::where('email', $validated['email'])->first();
 
         if (!$user) {
-            // Create new user
+            // Create new user (first-time OTP login)
             $user = User::create([
                 'email' => $validated['email'],
                 'name' => explode('@', $validated['email'])[0],
                 'password' => bcrypt(Str::random(16)),
                 'is_verified' => true,
             ]);
+            // New users must get the default role, otherwise they are
+            // invisible in admin UserOrderHistory (role('user') filter).
+            try {
+                $user->assignRole('user');
+            } catch (\Exception $e) {
+                \Log::warning('Role assignment failed for OTP user ' . $user->id . ': ' . $e->getMessage());
+            }
         } else {
             // Update existing user as verified
             $user->update(['is_verified' => true]);
+            // Self-heal: old accounts created before the role fix have no
+            // role at all — give them 'user' so their orders show in admin.
+            // Admins already have a role, so they are skipped.
+            try {
+                if ($user->roles()->count() === 0) {
+                    $user->assignRole('user');
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Role self-heal failed for user ' . $user->id . ': ' . $e->getMessage());
+            }
         }
 
         // Login the user

@@ -11,11 +11,11 @@
         <div class="news-content">
             <ul>
                 <li>
-                    <i class="fa-light fa-calendar-days"></i>
+                    <i class="fa-solid fa-calendar-days"></i>
                     {{ $item->publish_date ? $item->publish_date->format('M d, Y') : now()->format('M d, Y') }}
                 </li>
                 <li>
-                    <i class="fa-regular fa-user"></i>
+                    <i class="fa-solid fa-user"></i>
                     By {{ $item->author->full_name ?? 'Admin' }}
                 </li>
             </ul>
