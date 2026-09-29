@@ -154,6 +154,7 @@
                     </li>
                     @endif
                    
+                      @if(Auth::user()->hasRole('admin'))
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#news-menu" role="button"
                             aria-expanded="false" aria-controls="news-menu">
@@ -211,6 +212,7 @@
                         </div>
                     </li>
 
+                      @endif
                     
 
 
