@@ -43,6 +43,7 @@ class NewsController extends Controller
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'publish_date' => 'nullable|date',
             'status' => 'required|in:draft,published',
+            'admin_view' => 'nullable|integer|min:0',
         ]);
 
         $data = $request->only([
@@ -58,6 +59,7 @@ class NewsController extends Controller
             'meta_description',
         ]);
 
+        $data['admin_view'] = max(0, (int) $request->input('admin_view', 0));
         $data['slug'] = $this->uniqueSlug($request->title);
         $data['excerpt'] = $request->filled('excerpt')
             ? $request->excerpt
@@ -99,6 +101,7 @@ class NewsController extends Controller
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'publish_date' => 'nullable|date',
             'status' => 'required|in:draft,published',
+            'admin_view' => 'nullable|integer|min:0',
         ]);
 
         $data = $request->only([
@@ -113,6 +116,8 @@ class NewsController extends Controller
             'meta_title',
             'meta_description',
         ]);
+
+        $data['admin_view'] = max(0, (int) $request->input('admin_view', 0));
 
         if ($request->title !== $news->title) {
             $data['slug'] = $this->uniqueSlug($request->title, $news->id);
@@ -161,6 +166,18 @@ class NewsController extends Controller
         $news->save();
 
         return back()->with('success', 'Highlight status updated!');
+    }
+
+    public function addViews(Request $request, $id)
+    {
+        $request->validate([
+            'views_to_add' => 'required|integer|min:1|max:100000',
+        ]);
+
+        $news = News::findOrFail($id);
+        $news->increment('admin_view', (int) $request->input('views_to_add'));
+
+        return back()->with('success', 'Admin views added successfully!');
     }
 
     public function uploadEditorImage(Request $request)

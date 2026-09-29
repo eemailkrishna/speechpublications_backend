@@ -9,7 +9,7 @@
   "@@type": "ItemList",
   "name": "Speech Publications News",
   "url": "{{ url('/news') }}",
-  "numberOfItems": {{ is_object($news) ? $news->count() : 0 }},
+  "numberOfItems": {{ is_object($news) && method_exists($news, 'total') ? $news->total() : (is_object($news) ? $news->count() : 0) }},
   "itemListElement": [
     @if(is_object($news))
     @foreach($news->take(9) as $index => $item)
@@ -92,9 +92,9 @@
 <div class="sp-chip-rail">
     <div class="container">
         <a href="{{ route('news.index') }}" class="sp-chip {{ !isset($categoryId) || !$categoryId ? 'active' : '' }}">All News</a>
-        @foreach($categories as $category)
-        <a href="{{ route('news.category', $category->slug) }}" class="sp-chip {{ ($categoryId ?? '') == $category->id ? 'active' : '' }}">
-            {{ $category->name }}
+        @foreach($categories as $cat)
+        <a href="{{ route('news.category', $cat->slug) }}" class="sp-chip {{ ($categoryId ?? '') == $cat->id ? 'active' : '' }}">
+            {{ $cat->name }}
         </a>
         @endforeach
     </div>
@@ -116,15 +116,15 @@
                         <div class="post-content" style="padding: 20px;">
                             <ul class="post-list d-flex align-items-center" style="gap: 16px; flex-wrap: wrap; margin-bottom: 12px;">
                                 <li style="font-size: 12px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-light fa-user" style="color: var(--sp-maroon); font-size: 12px;"></i>
+                                    <i class="fa-solid fa-user" style="color: var(--sp-maroon); font-size: 12px;"></i>
                                     By {{ $featured->author->full_name ?? 'Admin' }}
                                 </li>
                                 <li style="font-size: 12px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-light fa-tag" style="color: var(--sp-maroon); font-size: 12px;"></i>
+                                    <i class="fa-solid fa-tag" style="color: var(--sp-maroon); font-size: 12px;"></i>
                                     {{ $featured->category->name ?? 'News' }}
                                 </li>
                                 <li style="font-size: 12px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                    <i class="fa-light fa-calendar-days" style="color: var(--sp-maroon); font-size: 12px;"></i>
+                                    <i class="fa-solid fa-calendar-days" style="color: var(--sp-maroon); font-size: 12px;"></i>
                                     {{ $featured->publish_date ? $featured->publish_date->format('d M, Y') : now()->format('d M, Y') }}
                                 </li>
                             </ul>
@@ -161,14 +161,11 @@
                         </div>
                         @endforelse
                     </div>
-                    <div class="text-center mt-4" id="load-more-wrap" @if(!isset($total) || $total <= $news->count()) style="display:none;" @endif>
-                        <button type="button" id="load-more-btn" class="theme-btn style-2"
-                            data-offset="{{ $news->count() }}"
-                            data-category="{{ isset($category) ? $category->id : ($categoryId ?? '') }}"
-                            data-search="{{ $search ?? '' }}">
-                            Load More <i class="fa-solid fa-arrow-right-long"></i>
-                        </button>
+                    @if(method_exists($news, 'hasMorePages') && ($news->hasMorePages() || $news->currentPage() > 1))
+                    <div class="text-center mt-4 news-pagination">
+                        {{ $news->links('pagination::bootstrap-4') }}
                     </div>
+                    @endif
                 </div>
             </div>
 
@@ -204,56 +201,54 @@
     <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--sp-muted); margin-bottom: 12px; font-family: var(--font-ui);">Categories</div>
     <div style="display: flex; flex-direction: column; gap: 2px;">
         <a href="{{ route('news.index') }}" style="display: block; padding: 8px 12px; border-radius: 6px; font-size: 13.5px; font-weight: 500; color: {{ !isset($categoryId) || !$categoryId ? 'var(--sp-maroon)' : 'var(--sp-ink)' }}; {{ !isset($categoryId) || !$categoryId ? 'font-weight: 700;' : '' }} text-decoration: none;">All News</a>
-        @foreach($categories as $category)
-        <a href="{{ route('news.category', $category->slug) }}" style="display: block; padding: 8px 12px; border-radius: 6px; font-size: 13.5px; font-weight: 500; color: {{ ($categoryId ?? '') == $category->id ? 'var(--sp-maroon)' : 'var(--sp-ink)' }}; {{ ($categoryId ?? '') == $category->id ? 'font-weight: 700;' : '' }} text-decoration: none;">{{ $category->name }}</a>
+        @foreach($categories as $cat)
+        <a href="{{ route('news.category', $cat->slug) }}" style="display: block; padding: 8px 12px; border-radius: 6px; font-size: 13.5px; font-weight: 500; color: {{ ($categoryId ?? '') == $cat->id ? 'var(--sp-maroon)' : 'var(--sp-ink)' }}; {{ ($categoryId ?? '') == $cat->id ? 'font-weight: 700;' : '' }} text-decoration: none;">{{ $cat->name }}</a>
         @endforeach
     </div>
 </div>
 
 <style>
-    .load-more-loading { opacity: 0.6; pointer-events: none; }
+    .news-pagination .pagination {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+        margin: 0;
+    }
+    .news-pagination .page-item {
+        margin: 0;
+    }
+    .news-pagination .page-link {
+        display: block;
+        padding: 9px 15px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--sp-maroon);
+        background: #fff;
+        border: 1px solid var(--sp-line);
+        border-radius: 10px;
+        text-decoration: none;
+        transition: .2s;
+    }
+    .news-pagination .page-link:hover {
+        background: var(--sp-maroon);
+        border-color: var(--sp-maroon);
+        color: #fff;
+    }
+    .news-pagination .page-item.active .page-link {
+        background: var(--sp-maroon);
+        border-color: var(--sp-maroon);
+        color: #fff;
+    }
+    .news-pagination .page-item.disabled .page-link {
+        color: var(--sp-muted);
+        opacity: .5;
+        pointer-events: none;
+    }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const loadMoreBtn = document.getElementById('load-more-btn');
-        const newsGrid = document.getElementById('news-grid');
-        const loadMoreWrap = document.getElementById('load-more-wrap');
-
-        if (loadMoreBtn) {
-            loadMoreBtn.addEventListener('click', function () {
-                const btn = this;
-                const offset = btn.getAttribute('data-offset');
-                const categoryId = btn.getAttribute('data-category');
-                const search = btn.getAttribute('data-search');
-
-                btn.classList.add('load-more-loading');
-                btn.innerHTML = 'Loading...';
-
-                let url = "{{ route('news.load-more') }}" + "?offset=" + offset;
-                if (categoryId) url += "&category_id=" + categoryId;
-                if (search) url += "&search=" + encodeURIComponent(search);
-
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.html) {
-                            newsGrid.insertAdjacentHTML('beforeend', data.html);
-                        }
-                        btn.setAttribute('data-offset', parseInt(offset) + 9);
-                        btn.classList.remove('load-more-loading');
-                        btn.innerHTML = 'Load More <i class="fa-solid fa-arrow-right-long"></i>';
-                        if (!data.hasMore || !data.html) {
-                            loadMoreWrap.style.display = 'none';
-                        }
-                    })
-                    .catch(() => {
-                        btn.classList.remove('load-more-loading');
-                        btn.innerHTML = 'Load More <i class="fa-solid fa-arrow-right-long"></i>';
-                    });
-            });
-        }
-
         // Mobile filter drawer
         var fab = document.getElementById('sp-filter-fab');
         var overlay = document.getElementById('sp-filter-overlay');

@@ -14,6 +14,8 @@ class Post extends Model
         'content',
         'media_urls',
         'media_type',
+        'media_types',
+        'media_thumbnails',
         'location',
         'visibility',
         'likes_count',
@@ -23,6 +25,8 @@ class Post extends Model
 
     protected $casts = [
         'media_urls' => 'array',
+        'media_types' => 'array',
+        'media_thumbnails' => 'array',
     ];
 
     public function user(): BelongsTo

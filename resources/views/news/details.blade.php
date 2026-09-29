@@ -192,23 +192,23 @@
                             <div class="post-content">
                                 <ul class="post-list d-flex align-items-center" style="gap: 18px; flex-wrap: wrap; margin-bottom: 16px;">
                                     <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                        <i class="fa-light fa-user" style="color: var(--sp-maroon);"></i>
+                                        <i class="fa-solid fa-user" style="color: var(--sp-maroon);"></i>
                                         By {{ $news->author->full_name ?? 'Admin' }}
                                     </li>
                                     <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                        <i class="fa-sharp fa-regular fa-comments" style="color: var(--sp-maroon);"></i>
+                                        <i class="fa-solid fa-comments" style="color: var(--sp-maroon);"></i>
                                         {{ $news->approved_comments_count ?? $comments->total() }} Comments
                                     </li>
                                     <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                        <i class="fa-light fa-eye" style="color: var(--sp-maroon);"></i>
-                                        {{ number_format($news->view_count ?? 0) }} Views
+                                        <i class="fa-solid fa-eye" style="color: var(--sp-maroon);"></i>
+                                        {{ number_format($news->total_views ?? $news->view_count ?? 0) }} Views
                                     </li>
                                     <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                        <i class="fa-light fa-tag" style="color: var(--sp-maroon);"></i>
+                                        <i class="fa-solid fa-tag" style="color: var(--sp-maroon);"></i>
                                         {{ $news->category->name ?? 'News' }}
                                     </li>
                                     <li style="font-size: 13px; color: var(--sp-muted); display: flex; align-items: center; gap: 6px;">
-                                        <i class="fa-light fa-calendar-days" style="color: var(--sp-maroon);"></i>
+                                        <i class="fa-solid fa-calendar-days" style="color: var(--sp-maroon);"></i>
                                         {{ $news->publish_date ? $news->publish_date->format('d M, Y') : now()->format('d M, Y') }}
                                     </li>
                                 </ul>
