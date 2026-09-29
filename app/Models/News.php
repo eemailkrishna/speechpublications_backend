@@ -23,6 +23,7 @@ class News extends Model
         'is_highlight',
         'reading_time',
         'view_count',
+        'admin_view',
         'status',
         'meta_title',
         'meta_description',
@@ -89,6 +90,11 @@ class News extends Model
                     $category->where('name', 'like', "%{$term}%");
                 });
         });
+    }
+
+    public function getTotalViewsAttribute()
+    {
+        return (int) $this->view_count + (int) $this->admin_view;
     }
 
     public function getFeaturedImageAttribute($value)

@@ -240,16 +240,21 @@ class ProductController extends Controller
     }
 
     public function OrderHistory(Request $request){
-        $userId = null;
+        $query = Order::with(['items.product'])
+            ->orderBy('created_at', 'desc');
+
         if(Auth::user()->hasRole('admin')){
-            $userId  = $request->query('order'); 
+            // Admin: show ALL orders by default.
+            // Only filter by user when ?order=<user_id> is explicitly passed
+            // (e.g. coming from "View Orders" button on user-order-history page).
+            if($request->filled('order')){
+                $query->where('user_id', $request->query('order'));
+            }
         }else{
-            $userId = auth()->id();
+            $query->where('user_id', auth()->id());
         }
-        $orders = Order::with(['items.product'])   // 👈 eager loading
-            ->where('user_id', $userId)
-            ->orderBy('created_at', 'desc')
-            ->get();
+
+        $orders = $query->get();
         return view('admin.product.order-history',['orders'=>$orders]);
     }
 
@@ -302,8 +307,11 @@ class ProductController extends Controller
     }
 
      public function UserOrderHistory(){
-       $users = User::role('user')          // 👈 sirf role = user
-        ->whereHas('orders')             // 👈 jinke orders hain
+       // Show EVERY user who has placed an order, regardless of role.
+       // Old code used User::role('user') which hid buyers that were
+       // created without the 'user' role (e.g. normal /register flow
+       // never assigned any role), so their orders were invisible in admin.
+       $users = User::whereHas('orders')             // 👈 jinke orders hain
         ->withCount('orders')            // 👈 orders count (optional)
         ->latest()
         ->get();

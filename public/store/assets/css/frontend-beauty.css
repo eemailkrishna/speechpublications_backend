@@ -464,22 +464,6 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--sp-maroon) !important;
 }
 
-/* ---------- Load more button ---------- */
-#load-more-btn {
-  border-radius: 100px !important;
-  padding: 12px 30px !important;
-  background: var(--sp-maroon) !important;
-  color: #fff !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  border: none !important;
-  font-family: var(--font-ui) !important;
-}
-
-#load-more-btn:hover {
-  background: var(--sp-maroon-dark) !important;
-}
-
 /* ---------- Mobile Filter FAB ---------- */
 .sp-filter-fab {
   display: none;

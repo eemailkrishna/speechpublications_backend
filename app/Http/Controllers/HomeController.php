@@ -64,17 +64,10 @@ class HomeController extends Controller
             ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
             ->when($search, fn($q) => $q->search($search))
             ->latest('publish_date')
-            ->take(9)
-            ->get();
+            ->paginate(9)
+            ->withQueryString();
 
-        $total = News::published()
-            ->where('slug', '!=', '')
-            ->whereNotNull('slug')
-            ->whereHas('author', fn($q) => $q->where('status', 'active'))
-            ->whereHas('category', fn($q) => $q->where('status', 'active'))
-            ->when($categoryId, fn($q) => $q->where('category_id', $categoryId))
-            ->when($search, fn($q) => $q->search($search))
-            ->count();
+        $total = $news->total();
 
         $categories = NewsCategory::active()
             ->withCount(['news' => fn($q) => $q->published()])
@@ -82,23 +75,11 @@ class HomeController extends Controller
             ->get();
 
         $recentPosts = News::published()->where('slug', '!=', '')->whereNotNull('slug')->orderBy('publish_date', 'desc')->take(4)->get();
-        $trendingPosts = News::published()->where('slug', '!=', '')->whereNotNull('slug')->orderBy('view_count', 'desc')->orderBy('publish_date', 'desc')->take(4)->get();
+        $trendingPosts = News::published()->where('slug', '!=', '')->whereNotNull('slug')->orderByRaw('(view_count + admin_view) desc')->orderBy('publish_date', 'desc')->take(4)->get();
 
         $metaTitle = 'News - Speech Publications';
         $metaDescription = 'Stay updated with the latest news and articles from Speech Publications.';
         $metaImage = asset('images/logo.png');
-
-        // Return JSON for AJAX requests
-        if ($request->ajax()) {
-            $html = '';
-            foreach ($news as $item) {
-                $html .= view('news.partials.card', ['item' => $item])->render();
-            }
-            return response()->json([
-                'html' => $html,
-                'hasMore' => $news->count() >= 9 && $news->count() < $total,
-            ]);
-        }
 
         $data = compact('featured', 'news', 'categories', 'recentPosts', 'trendingPosts', 'categoryId', 'search', 'total', 'metaTitle', 'metaDescription', 'metaImage');
         return view('news.news', $data);

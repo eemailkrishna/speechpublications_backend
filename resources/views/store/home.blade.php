@@ -1409,7 +1409,7 @@
                         <div class="news-content">
                             <ul>
                                 <li>
-                                    <i class="fa-light fa-calendar-days"></i>
+                                    <i class="fa-solid fa-calendar-days"></i>
                                     Feb 10, 2024
                                 </li>
                                 <li>
@@ -1435,7 +1435,7 @@
                         <div class="news-content">
                             <ul>
                                 <li>
-                                    <i class="fa-light fa-calendar-days"></i>
+                                    <i class="fa-solid fa-calendar-days"></i>
                                     Mar 20, 2024
                                 </li>
                                 <li>
@@ -1461,7 +1461,7 @@
                         <div class="news-content">
                             <ul>
                                 <li>
-                                    <i class="fa-light fa-calendar-days"></i>
+                                    <i class="fa-solid fa-calendar-days"></i>
                                     Jun 14, 2024
                                 </li>
                                 <li>
@@ -1488,7 +1488,7 @@
                         <div class="news-content">
                             <ul>
                                 <li>
-                                    <i class="fa-light fa-calendar-days"></i>
+                                    <i class="fa-solid fa-calendar-days"></i>
                                     Mar 12, 2024
                                 </li>
                                 <li>

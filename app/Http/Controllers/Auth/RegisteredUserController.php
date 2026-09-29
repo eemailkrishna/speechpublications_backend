@@ -41,6 +41,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Assign default 'user' role so the buyer shows up in
+        // admin UserOrderHistory (which was filtering by role).
+        try {
+            $user->assignRole('user');
+        } catch (\Exception $e) {
+            \Log::warning('Role assignment failed for user ' . $user->id . ': ' . $e->getMessage());
+        }
+
         event(new Registered($user));
 
         Auth::login($user);

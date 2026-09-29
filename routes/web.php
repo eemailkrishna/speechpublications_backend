@@ -27,7 +27,6 @@ use App\Models\Sitemap;
 // });
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/news', [HomeController::class, 'news'])->name('news.index');
-Route::get('/news/load-more', [NewsFrontController::class, 'loadMore'])->name('news.load-more');
 Route::get('/news/author/{slug}', [NewsFrontController::class, 'author'])->name('news.author');
 Route::get('/news/category/{slug}', [NewsFrontController::class, 'category'])->name('news.category');
 Route::get('/news/{slug}', [NewsFrontController::class, 'show'])->name('news.details');
@@ -147,6 +146,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     ]);
 
     Route::post('admin-news/{id}/toggle-featured', [NewsController::class, 'toggleFeatured'])->name('admin-news.toggle-featured');
+
+    Route::post('admin-news/{id}/add-views', [NewsController::class, 'addViews'])->name('admin-news.add-views');
 
     // Sitemap Management
     Route::get('/sitemap-list', [SitemapController::class, 'index'])->name('sitemap.list');

@@ -75,7 +75,17 @@
                                         <td><span class="badge bg-primary-subtle text-primary fw-normal">{{ $item->category->name ?? '-' }}</span></td>
                                         <td>{{ $item->author->full_name ?? '-' }}</td>
                                         <td class="text-secondary">{{ $item->publish_date ? $item->publish_date->format('d M Y') : '-' }}</td>
-                                        <td><i data-lucide="eye" class="icon-sm me-1 text-secondary"></i>{{ $item->view_count }}</td>
+                                        <td>
+                                            <i data-lucide="eye" class="icon-sm me-1 text-secondary"></i>{{ number_format($item->total_views) }}
+                                            @if($item->admin_view)
+                                            <div class="text-muted" style="font-size: 11px;">+{{ number_format($item->admin_view) }} admin</div>
+                                            @endif
+                                            <form action="{{ route('admin-news.add-views', $item->id) }}" method="POST" class="d-flex align-items-center gap-1 mt-1">
+                                                @csrf
+                                                <input type="number" name="views_to_add" min="1" max="100000" value="10" class="form-control form-control-sm" style="width: 74px; padding: 3px 6px; font-size: 12px;">
+                                                <button type="submit" class="btn btn-sm btn-outline-primary" style="padding: 3px 8px; font-size: 12px;" title="Add admin views">+ Add</button>
+                                            </form>
+                                        </td>
                                         <td>
                                             <form action="{{ route('admin-news.toggle-featured', $item->id) }}" method="POST">
                                                 @csrf
@@ -103,13 +113,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="gridjs-footer d-flex flex-wrap align-items-center justify-content-between gap-2 pt-3">
-                            <span class="text-secondary small">
-                                Showing {{ $news->firstItem() ?? 0 }} to {{ $news->lastItem() ?? 0 }} of {{ $news->total() }} entries
-                            </span>
-                            <div>
-                                {{ $news->links() }}
-                            </div>
+                        <div class="gridjs-footer pt-3">
+                            {{ $news->links('pagination::bootstrap-5') }}
                         </div>
                     </div>
                 </div>

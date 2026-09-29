@@ -182,6 +182,15 @@
 
                                     <div class="col-xl-6">
                                         <div class="mb-3">
+                                            <label for="admin_view" class="form-label">Admin Views (Fake)</label>
+                                            <input type="number" min="0" class="form-control" id="admin_view" name="admin_view" value="{{ old('admin_view', $news->admin_view ?? 0) }}">
+                                            @error('admin_view')<div class="text-danger">{{ $message }}</div>@enderror
+                                            <small class="text-muted">Real views: {{ number_format($news->view_count ?? 0) }}. Admin views are shown on top of real views.</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6">
+                                        <div class="mb-3">
                                             <label class="form-label">Featured News</label>
                                             <div class="toggle-label">
                                                 <label class="toggle-switch">
